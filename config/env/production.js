@@ -251,7 +251,7 @@ module.exports = {
     *                                                                          *
     ***************************************************************************/
     onlyAllowOrigins: [
-      'https://jtw-drill-pad.herokuapp.com/',
+      'https://jtw-drill-pad.herokuapp.com',
       // 'https://staging.example.com',
     ],
 

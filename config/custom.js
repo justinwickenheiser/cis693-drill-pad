@@ -36,7 +36,7 @@ module.exports.custom = {
   platformCopyrightYear: '2020',
   platformName:  'DrillPad',
   platformCompanyName: 'Justin Wickenheiser',
-  platformCompanyAboutHref: 'https://sailsjs.com/about',
+  platformCompanyAboutHref: 'https://github.com/justinwickenheiser/cis693-drill-pad',
   privacyPolicyUpdatedAt: 'Aug. 9, 2020',
   termsOfServiceUpdatedAt: 'Aug. 9, 2020',
 

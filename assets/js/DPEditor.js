@@ -129,8 +129,25 @@ class DPEditor {
 		// Set Up PaperJS Project
 		paper.setup('canvas');
 		dpEditor.view = view;
+		var field = DP.drawField(dpEditor.settings.pps);
 
-		
+		// prep some <Layers> in the project
+		var referenceLayer = new paper.Layer({
+			'name': 'reference'
+		});
+		var performerLayer = new paper.Layer({
+			'name': 'performer'
+		});
+		performerLayer.activate(); // make activeLayer in project
+
+		// Now add the 1st chart, because we always want at least 1 chart
+		dpEditor.setDPChart(new DPChart({
+			'chartId': uuidv4(),
+			'chartNumber': dpEditor.dpChart.length + 1,
+			'counts': 0,
+			'activeCountIdx': 0
+		}, dpEditor));
+
 	} // END OF CONSTRUCTOR()
 
 	// make the toolbar widget move with your scroll

@@ -1,4 +1,9 @@
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<style type="text/css">
+	.dp-info {
+		margin: 1em 4em;
+	}
+</style>
 <div id="homepage" :class="[heroHeightSet ? '' : 'uninitialized']" v-cloak>
 	<div id="dp-editor-container">
 		<!-- Loading... -->
@@ -10,6 +15,29 @@
 		<p class="muted">
 			If you continue to see this message for more than 30 seconds, you may have JavaScript disabled or the editor may have failed to load.
 		</p>
+	</div>
+	<!-- Directions / Info -->
+	<div class="dp-info">
+		<div class="row">
+			<div class="col-md-4">
+				<h2>Adding a Chart</h2>
+				<p>
+					Click the <code>[+]</code> button at the top of the toolbar. This will do the following:
+					<ol>
+						<li>Create a new DPChart</li>
+						<li>Add the chart to the end of the editor's array of charts</li>
+						<li>Set the new chart as the active chart</li>
+					</ol>
+				</p>
+			</div>
+			<div class="col-md-4">
+				<h2>Pan / Zoom</h2>
+				<p>
+					<code>shift + [scroll]</code> will Pan<br />
+					<code>alt + [scroll]</code> will Zoom
+				</p>
+			</div>
+		</div>
 	</div>
 </div>
 

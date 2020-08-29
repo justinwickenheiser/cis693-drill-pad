@@ -1,0 +1,44 @@
+.editor-container {
+	display: block;
+	position: relative;
+	padding-right: 4.5em;
+	margin: 1em 4em;
+}
+
+
+.editor-toolbar {
+	position: absolute;
+	right: 0;
+	top: 1em;
+} 
+
+.editor-toolbar .btn-toolbar {
+	margin: 0 0 0 -40px;
+	padding: 0;
+	width: 0;
+}
+
+.editor-toolbar .btn-toolbar .btn-group {
+	margin-bottom: 12px;
+}
+
+/* Default buttons */
+.btn-toolbar .btn-default {
+	background: #FFF;
+	border: 1px solid #999;
+}
+.btn-toolbar .btn-default:hover,
+.btn-toolbar .btn-default:focus,
+.btn-toolbar .btn-default:active,
+.btn-toolbar .btn-default.active {
+	background: rgba(238, 238, 238, 0.75);
+	border-color: #cccccc;
+}
+.btn-toolbar .btn-default.disabled {
+	color: #606060;
+	background: rgba(238, 238, 238, 0.5); 
+}
+.btn-toolbar .btn-default,
+.btn-toolbar .btn-default:visited {
+	color: #232323; 
+}

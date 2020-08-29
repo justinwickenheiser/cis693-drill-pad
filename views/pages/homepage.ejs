@@ -2,14 +2,22 @@
 <div id="homepage" :class="[heroHeightSet ? '' : 'uninitialized']" v-cloak>
 	<div id="dp-editor-container">
 		<!-- Loading... -->
-		<canvas id="canvas" width="800" height="500" style="border: 1px solid rgb(179, 179, 179)"></canvas>
+	</div>
+	<div id="dp-content-loading">
+		<p>
+			<strong>Loading editor...</strong>
+		</p>
+		<p class="muted">
+			If you continue to see this message for more than 30 seconds, you may have JavaScript disabled or the editor may have failed to load.
+		</p>
 	</div>
 </div>
 
 <script type="text/javascript">
 	$(document).ready(function () {
-		paper.install(window);
-		paper.setup('canvas');
+		var editor = new DPEditor('dp-editor-container');
+		console.log(editor);
+		$('#dp-content-loading').toggle();
 	});
 </script>
 <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

@@ -6,6 +6,9 @@ class DPEditor {
 		'canvas': {
 			// parent
 		},
+		'chartHeader': {
+			// parent
+		},
 		'toolbar': {
 			// parent
 		},
@@ -61,6 +64,70 @@ class DPEditor {
 		dpEditor.ui.parent.addClass(dpEditor.ui.class + '-container');
 
 		// Prepare the modal
+
+		// Chart Header
+		dpEditor.ui.chartHeader.parent = $('<div>', {
+			'class': dpEditor.ui.class + '-chart-information'
+		}).appendTo(dpEditor.ui.parent);
+		// Chart settings container
+		dpEditor.ui.chartHeader.settings = $('<div>', {
+			'class': dpEditor.ui.class + '-chart-settings'
+		}).appendTo(dpEditor.ui.chartHeader.parent);
+		// Chart Controls (forward / backwards)
+		dpEditor.ui.chartHeader.controls = $('<div>', {
+			'class': dpEditor.ui.class + '-chart-controls'
+		}).appendTo(dpEditor.ui.chartHeader.parent);
+		// Count Controls (forward / backwards)
+		dpEditor.ui.chartHeader.countControls = $('<div>', {
+			'class': dpEditor.ui.class + '-chart-count-controls'
+		}).appendTo(dpEditor.ui.chartHeader.parent);
+
+		// previous chart
+		$('<a>', {
+			'class': 'btn btn-default',
+			'html': '<span class="fa fa-chevron-left"></span>',
+			'title': 'Previous Chart'
+		}).bind('mouseup', {}, function(event) {
+			var currentIdx = dpEditor.getActiveChartIdx();
+			if (currentIdx > 0) {
+				dpEditor.setActiveChartIdx(currentIdx-1);
+				
+				// update the UI by redrawing the editor
+				dpEditor.redraw();
+			} else {
+				console.log('DEBUG: Currently on the first chart. There is no previous chart to move to.');
+			}
+		}).appendTo(dpEditor.ui.chartHeader.controls);
+		// next chart
+		$('<a>', {
+			'class': 'btn btn-default',
+			'html': '<span class="fa fa-chevron-right"></span>',
+			'title': 'Next Chart'
+		}).bind('mouseup', {}, function(event) {
+			var currentIdx = dpEditor.getActiveChartIdx();
+			if (currentIdx < dpEditor.getDPCharts().length-1) {
+				dpEditor.setActiveChartIdx(currentIdx+1);
+				
+				// update the UI by redrawing the editor
+				dpEditor.redraw();
+			} else {
+				console.log('DEBUG: Currently on the last chart. There is no next chart to move to.');
+			}
+		}).appendTo(dpEditor.ui.chartHeader.controls);
+
+		dpEditor.ui.chartHeader.controls.append(document.createTextNode('Chart: '));
+		// Chart Number
+		$('<span>', {
+			'id': 'chartNumber' 
+		}).appendTo(dpEditor.ui.chartHeader.controls);
+
+
+		dpEditor.ui.chartHeader.countControls.append(document.createTextNode('Count: '));
+		// Count Number
+		$('<span>', {
+			'id': 'countNumber' 
+		}).appendTo(dpEditor.ui.chartHeader.countControls);
+
 		
 		// Prepare the Canvas 
 		dpEditor.ui.canvas.parent = $('<canvas>', {
@@ -264,5 +331,20 @@ class DPEditor {
 
 		// Add the new chart to the editor
 		dpEditor.setDPChart(newChart);
+		
+		// update the UI by redrawing the editor
+		dpEditor.redraw();
+	}
+
+	redraw() {
+		if (this.dpChart.length) {
+			var chartIdx = this.getActiveChartIdx();
+			var dpChart = this.dpChart[chartIdx];
+			var countIdx = dpChart.getActiveCountIdx();
+
+			// Set the Chart Header information
+			document.getElementById('chartNumber').innerText = dpChart.getChartNumber().toString() + ' / ' + this.dpChart.length;
+			document.getElementById('countNumber').innerText = countIdx.toString() + ' / ' + dpChart.getCounts().toString();
+		}
 	}
 }

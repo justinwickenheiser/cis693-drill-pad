@@ -22,23 +22,44 @@
 	margin-bottom: 12px;
 }
 
+.editor-chart-information {
+	margin-bottom: 1em;
+}
+.editor-chart-settings, .editor-chart-controls, .editor-chart-count-controls {
+	display: inline;
+}
+.editor-chart-settings a.btn.btn-default, .editor-chart-controls a.btn.btn-default, .editor-chart-count-controls a.btn.btn-default  {
+	margin-right: .5em;
+}
+.editor-chart-count-controls {
+	float: right;
+}
+
 /* Default buttons */
-.btn-toolbar .btn-default {
+.btn-toolbar .btn-default,
+.editor-chart-controls .btn-default {
 	background: #FFF;
 	border: 1px solid #999;
 }
 .btn-toolbar .btn-default:hover,
 .btn-toolbar .btn-default:focus,
 .btn-toolbar .btn-default:active,
-.btn-toolbar .btn-default.active {
+.btn-toolbar .btn-default.active,
+.editor-chart-controls .btn-default:hover,
+.editor-chart-controls .btn-default:focus,
+.editor-chart-controls .btn-default:active,
+.editor-chart-controls .btn-default.active {
 	background: rgba(238, 238, 238, 0.75);
 	border-color: #cccccc;
 }
-.btn-toolbar .btn-default.disabled {
+.btn-toolbar .btn-default.disabled,
+.editor-chart-controls .btn-default.disabled {
 	color: #606060;
 	background: rgba(238, 238, 238, 0.5); 
 }
 .btn-toolbar .btn-default,
-.btn-toolbar .btn-default:visited {
+.btn-toolbar .btn-default:visited,
+.editor-chart-controls .btn-default,
+.editor-chart-controls .btn-default:visited {
 	color: #232323; 
 }

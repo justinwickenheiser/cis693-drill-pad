@@ -213,6 +213,38 @@ class DPEditor {
 			'id': 'chartNumber' 
 		}).appendTo(dpEditor.ui.chartHeader.controls);
 
+		// Previous Count
+		$('<a>', {
+			'class': 'btn btn-default',
+			'html': '<span class="fa fa-chevron-left"></span>',
+			'title': 'Previous Count'
+		}).bind('mouseup', {}, function(event) {
+			var currentChart = dpEditor.getDPChart( dpEditor.getActiveChartIdx() );
+			var currentCountIdx = currentChart.getActiveCountIdx();
+			if (currentCountIdx > 0) {
+				currentChart.setActiveCountIdx(currentCountIdx-1);
+				// update the UI by redrawing the editor
+				dpEditor.redraw();
+			} else {
+				console.log('DEBUG: Currently on the initial count (0). There is no previous count to move to.');
+			}
+		}).appendTo(dpEditor.ui.chartHeader.countControls);
+		// Next Count
+		$('<a>', {
+			'class': 'btn btn-default',
+			'html': '<span class="fa fa-chevron-right"></span>',
+			'title': 'Next Count'
+		}).bind('mouseup', {}, function(event) {
+			var currentChart = dpEditor.getDPChart( dpEditor.getActiveChartIdx() );
+			var currentCountIdx = currentChart.getActiveCountIdx();
+			if (currentCountIdx < currentChart.getCounts()) {
+				currentChart.setActiveCountIdx(currentCountIdx+1);
+				// update the UI by redrawing the editor
+				dpEditor.redraw();
+			} else {
+				console.log('DEBUG: Currently on the last count. There is no next count to move to.');
+			}
+		}).appendTo(dpEditor.ui.chartHeader.countControls);
 
 		dpEditor.ui.chartHeader.countControls.append(document.createTextNode('Count: '));
 		// Count Number

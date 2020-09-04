@@ -594,8 +594,8 @@ class DPEditor {
 		// Add the new chart to the editor
 		dpEditor.setDPChart(newChart);
 		
-		// update the UI by redrawing the editor
-		dpEditor.redraw();
+		// call the chart settings feature
+		$(dpEditor.ui.chartHeader.settings[0].children[0]).click();
 	}
 
 	// Reset the View from PanZoom

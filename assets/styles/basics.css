@@ -6,3 +6,204 @@ code {
 	border: 1px solid rgb(108,109,105);
 	font-size: 11px;
 }
+
+.req,
+.required {
+	color:#F00;
+}
+
+label {
+	display: block !important;
+	margin-bottom: 5px;
+}
+
+input[type="search"] {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+input[type="radio"],
+input[type="checkbox"] {
+	margin: 4px 0 0;
+	margin-top: 1px\9; /* IE6, IE7, IE8 */
+	/* IE8-9 */
+	line-height: normal;
+	padding:0;
+	/* Border and background color removed as it broke iOS radio buttons - 5/12/15 BS */
+	/* 	border:none; */
+	/* background-color: inherit; */
+}
+input[type="file"] {
+	display: block;
+}
+select[multiple],
+select[size] {
+	height: auto;
+}
+select optgroup {
+	font-size: inherit;
+	font-style: inherit;
+	font-family: inherit;
+}
+input[type="file"]:focus,
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+	outline: thin dotted #333;
+	outline: 3px auto -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+	height: auto;
+}
+
+input,
+select,
+textarea {
+	 /*display: block;*/ 
+	/* width: 100%; */
+	/* height: 34px; */
+	padding: 6px 6px;
+	font-size: 14px;
+	/* line-height: 1.428571429; */
+	color: #555555;
+	vertical-align: middle;
+	/* background-color: #ffffff; */ /* Removed as it broke iOS radio buttons - 5/12/15 BS */
+	background-image: none;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	/* margin-left: 1px; */
+}
+
+select {
+	height:34px;
+	font-size:.875em;
+	background-color: #ffffff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	border-color: #66afe9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	
+}
+
+input:-moz-placeholder {
+	color: #999999;
+}
+input::-moz-placeholder {
+	color: #999999;
+}
+input:-ms-input-placeholder {
+	color: #999999;
+}
+input::-webkit-input-placeholder {
+	color: #999999;
+}
+
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[readonly],
+select[readonly],
+textarea[readonly],
+fieldset[disabled] input,
+fieldset[disabled] select,
+fieldset[disabled] textarea {
+	cursor: not-allowed;
+	background-color: #eeeeee;
+}
+
+strong + br + label {
+	margin-top: 5px;
+}
+input[type="radio"] {
+	display: inline;
+	min-height: 20px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+/* 	padding-left: 25px; */
+	margin-left:1px;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+input[type="checkbox"]{
+	position:relative;
+	display: inline;
+	min-height: 20px;
+	margin-top: 6px;
+	margin-bottom: 10px;
+/* 	padding-left: 25px; */
+	margin-left:1px;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+label.radio,
+label.checkbox {
+	cursor: pointer;
+	font-weight:normal;
+}
+
+[data-toggle="buttons"] > .btn > input[type="radio"],
+[data-toggle="buttons"] > .btn > input[type="checkbox"] {
+	display: none;
+}
+
+[type="submit"],
+.btn-primary {
+	/*background: #1b6ec2;*/
+	background: #17a2b8; /* Theme Color */
+	border-color: #17a2b8; /* Theme Color */
+	color: #fff !important;
+}
+[type="submit"]:hover,
+[type="submit"]:focus,
+[type="submit"]:active,
+[type="submit"].active,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+	background: #FFF;
+	/*color: #1b6ec2;*/
+	color: #17a2b8 !important;
+	/*border-color: #1b6ec2;*/
+	border-color: #17a2b8; /* Theme Color */
+}
+[type="submit"].disabled,
+.btn-primary.disabled {
+	color: #606060;
+	border: 1px solid #999;
+	background: rgba(238,238,238,0.5); 
+}
+
+
+@media screen and (max-width:600px){
+	input,
+	select,
+	textarea {
+		width:100%;
+		box-sizing: border-box; /*Allows a border to remain on the inputs*/
+		margin-bottom:1em;
+	}
+	input[type="radio"],
+	input[type="checkbox"] {
+		 width:inherit;
+		 padding:5px;
+	}
+	label.radio,
+	label.checkbox {
+		padding:5px;
+		margin-right:3px;
+	}
+}

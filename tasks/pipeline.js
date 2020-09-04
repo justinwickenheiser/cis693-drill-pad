@@ -84,7 +84,10 @@ var jsFilesToInject = [
   // in no particular order.  To customize the ordering, add additional items
   // here, _above_ this one.
   'js/helpers/*.js',
-  'js/**/*.js'
+  'js/**/*.js',
+
+  // Ignore the features because the editor will load them
+  '!js/feature/**/*.js'
 ];
 
 

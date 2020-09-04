@@ -64,6 +64,98 @@ class DPEditor {
 		dpEditor.ui.parent.addClass(dpEditor.ui.class + '-container');
 
 		// Prepare the modal
+		(function () {
+			// modal (root)
+			dpEditor.ui.modal = $('<div>', {
+				'class': 'modal hide modal-wide ' + dpEditor.ui.class + '-modal',
+				'tabindex': -1,
+				'role': 'dialog',
+				'aria-hidden': true
+			}).modal({
+				'backdrop': 'static',
+				'keyboard': true,
+				'show': false
+			}).bind('show.bs.modal', {}, function(event) {
+				dpEditor.ui.modal.addClass('show');
+				$('.' + dpEditor.ui.class + '-modal-header h3', this).empty().html($(this).data('header'));
+				$('.' + dpEditor.ui.class + '-modal-body', this).empty().html($(this).data('content'));
+				$('.' + dpEditor.ui.class + '-modal-footer .btn-primary', this).hide();
+				if ($(this).data('showSave')) {
+					$('.' + dpEditor.ui.class + '-modal-footer .btn-primary', this).show();
+				}
+			}).bind('shown.bs.modal', {}, function(event) {
+				// Without this, we'll never be able to edit text fields in things like the Link dialog:
+				// Credit (although I modified it to play nice) goes to Peter J. Hart via this link: http://stackoverflow.com/questions/14420300/bootstrap-with-ckeditor-equals-problems
+				$(document).off('focusin.modal').bind('focusin.modal', {
+					'modal': $(this)
+				}, function (event) {});
+				// focus on the first input element
+				$('input, textarea, select', this).first().focus();
+			}).bind('hidden.bs.modal', {}, function(event) {
+				// remove all of the DOM from the modal when it closes so there are no references to the inputs
+				$('.' + dpEditor.ui.class + '-modal-body', this).empty();
+				// clear the data attached to the modal
+				dpEditor.getUIModal().removeData();
+			}).bind('hide.bs.modal', {}, function(event) {
+				dpEditor.ui.modal.removeClass('show');
+			});
+
+			// // modal dialog
+			// var modalDialog = $('<div>', {
+			// 	'class': 'modal-dialog',
+			// 	'role': 'document'
+			// }).appendTo(dpEditor.ui.modal);
+
+			// // modal content
+			// var modalContent = $('<div>', {
+			// 	'class': 'modal-content'
+			// }).appendTo(modalDialog);
+
+
+			// modal header
+			$('<div>', {
+				'class': 'modal-header ' + dpEditor.ui.class + '-modal-header'
+			}).append($('<button>', {
+				'class': 'close',
+				'data-dismiss': 'modal',
+				'aria-hidden': true,
+				'html': '&times;'
+			})).append($('<h3>', {
+				'html': 'Loading...'
+			})).appendTo(dpEditor.ui.modal);
+			
+			// modal body/content
+			$('<div>', {
+				'class': 'modal-body ' + dpEditor.ui.class + '-modal-body',
+				'html': 'Loading...'
+			}).appendTo(dpEditor.ui.modal);
+
+			// footer
+			$('<div>', {
+				'class': 'modal-footer ' + dpEditor.ui.class + '-modal-footer'
+			}).append($('<button>', {
+				'class': 'btn',
+				'data-dismiss': 'modal',
+				'aria-hidden': true,
+				'text': 'Close'
+			})).append($('<button>', {
+				'class': 'btn btn-primary',
+				'data-dismiss': 'modal',
+				'aria-hidden': true,
+				'text': 'Save changes'
+			}).bind('click', {}, function(event) {
+				// this.showUIModal() sets up the data object on the DOM element returned by this.getUIModal(). Currently the variables are: wrapperIndex, wrapperChunkIndex, header, and content
+				var feature = dpEditor.getUIModal().data('dpFeature');
+				
+				// If there is a feature, call that feature's saveFormDom
+				if (feature !== null) {
+					feature.saveFormDom(dpEditor);
+				} else {
+					console.log('** No DPFeature provided. Nothing to save. **')
+				}
+
+			})).appendTo(dpEditor.ui.modal);
+		})();
 
 		// Chart Header
 		dpEditor.ui.chartHeader.parent = $('<div>', {
@@ -193,6 +285,117 @@ class DPEditor {
 			dpEditor.addChart();
 		}).appendTo(btnGroup);
 
+		// Feature Buttons
+		dpEditor.ui.toolbar.feature = $('<div>', {
+			'class': 'btn-group btn-group-vertical'
+		}).appendTo(btnToolbar);
+
+		function fnLoad(obj, appendLocation) {
+			$.ajax({
+				'url': '/js/feature/1/' + obj.folder + '/' + obj.object + '.js',
+				'async': false,
+				'cache': false,
+				'success': function(data, textStatus, xhr) {
+				},
+				'complete': function(xhr, textStatus) {
+					var isDefined = false,
+						dpFeatureClass,
+						dpFeature;
+
+					if (textStatus == 'success') {
+						try {
+							// create a the class (obj.object) in code by using eval on the entire code from the file
+							dpFeatureClass = eval(`(${xhr.responseText})`); // give the class name an alias so we can reference it in code
+							console.log(obj.object + ' loaded successfully');
+							isDefined = true;
+						} catch(e) {
+							console.log(obj.object + ' error: ' + e.message);
+						}
+					} else {
+						console.log(obj.object + ' error: ' + textStatus);
+					}
+					
+					if (!isDefined) {
+						dpFeatureClass = DPFeature; // DPFeature class exists because it is being included on the html page via a <script>
+						console.log(obj.object + ' failed to load; using DPFeature instead');
+					}
+
+					dpFeature = new dpFeatureClass({
+						'folder': obj.folder,
+						'featureId': obj.featureId,
+						'icon': obj.icon,
+						'title': obj.title,
+						'buttonSetting': obj.buttonSetting,
+						'object': obj.object
+					}, dpEditor);
+					
+					// Add the newly imported feature to an array of features belonging to this DPEditor.
+					dpEditor.addFeature(dpFeature);
+
+					// Add the btn to the toolbar for this feature.
+					$('<a>', {
+						'id': dpFeature.getFeatureId(),
+						'class': 'btn btn-default',
+						'html': '<span class="fa fa-' + dpFeature.getIcon() + '"></span>',
+						'title': dpFeature.getTitle()
+					}).on('click', function() {
+						// set active feature
+						dpEditor.setActiveFeature(dpFeature);
+
+						// call the onclick function for the feature
+						dpFeature.onclick();
+					}).appendTo(appendLocation);
+
+				}
+			}); // END OF AJAX REQUEST
+		}; // END OF FNLOAD()
+
+		// Load the features
+		// this should be stored in a DB, queried, and looped over the results vs. declaring a hardcoded variable.
+		var tempFeatures = [
+			{
+				'folder': 'addperformer',
+				'featureId': uuidv4(),
+				'icon': 'user',
+				'title': 'Add Performer',
+				'buttonSetting': 'active',
+				'object': 'DPAddPerformer'
+			},
+			{
+				'folder': 'pointer',
+				'featureId': uuidv4(),
+				'icon': 'mouse-pointer',
+				'title': 'Pointer',
+				'buttonSetting': 'default',
+				'object': 'DPPointer'
+			},
+			{
+				'folder': 'resetpz',
+				'featureId': uuidv4(),
+				'icon': 'search',
+				'title': 'Reset Zoom',
+				'buttonSetting': 'default',
+				'object': 'DPResetPZ'
+			},
+			{
+				'folder': 'chartsettings',
+				'featureId': uuidv4(),
+				'icon': 'cog',
+				'title': 'Chart Settings',
+				'buttonSetting': 'default',
+				'object': 'DPChartSettings'
+			}
+		];
+
+		for (var i = 0; i < tempFeatures.length; i++) {
+			if (tempFeatures[i].object !== 'DPChartSettings') {
+				fnLoad(tempFeatures[i], dpEditor.ui.toolbar.feature);
+			} else {
+				// The DPChartSettings needs to be appended in a different area.
+				fnLoad(tempFeatures[i], dpEditor.ui.chartHeader.settings);
+			}
+		}
+
 		// Set Up PaperJS Project
 		paper.setup('canvas');
 		dpEditor.view = view;
@@ -227,6 +430,65 @@ class DPEditor {
 		} else {
 			ui.toolbar.parent.removeClass('fixed');
 		}
+	}
+	// Add a DPFeature to an array of features belonging to this DPEditor (dpFeature[])
+	addFeature(val) {
+		if (val !== null && typeof(val) === 'object' && val instanceof DPFeature && this.dpFeatureKey[val.getFolder()] == null) {
+			this.dpFeatureKey[val.getFolder()] = this.dpFeature.push(val) - 1;
+			return true;
+		}
+		return false;
+	};
+
+	// ACTIVEFEATURE
+	getActiveFeature() {
+		return this.activeFeature;
+	}
+	setActiveFeature(val) {
+		if (val !== null && typeof(val) === 'object' && (val instanceof DPFeature || val === DPFeature)) {
+			// clear the current active feature first
+			this.clearActiveFeature();
+
+			// now set new active feaure
+			this.activeFeature = val;
+			// determine if the button needs to be highlighed.
+			if (val.getButtonSetting() === 'active') {
+				$( '#'+val.getFeatureId() ).removeClass('btn-default');
+				$( '#'+val.getFeatureId() ).addClass('btn-primary');
+			}
+
+			return true;
+		}
+		return false;
+	}
+	clearActiveFeature() {
+		if (this.activeFeature !== null) {
+			// before clearing the active feature, we must first run any deselect() calls on the current active feature
+			this.activeFeature.deselect();
+
+			$( '#'+this.activeFeature.getFeatureId() ).addClass('btn-default');
+			$( '#'+this.activeFeature.getFeatureId() ).removeClass('btn-primary');
+		}
+		this.activeFeature = null;
+		return true;
+	}
+
+	// MODAL
+	getUIModal() {
+		return this.ui.modal;
+	}
+	showUIModal(dpFeat, header, content) {
+		this.getUIModal().data({
+			'dpFeature': dpFeat,
+			'header': header,
+			'content': content,
+			'showSave': true
+		}).modal('show');
+		return true;
+	}
+	// currenty un-used
+	hasUIModal() {
+		return false;
 	}
 
 	// EDITORID
@@ -334,6 +596,12 @@ class DPEditor {
 		
 		// update the UI by redrawing the editor
 		dpEditor.redraw();
+	}
+
+	// Reset the View from PanZoom
+	resetView() {
+		this.view.zoom = 1;
+		this.view.center = [this.view.size.width/2, this.view.size.height/2];
 	}
 
 	redraw() {

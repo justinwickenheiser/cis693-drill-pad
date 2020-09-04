@@ -1,0 +1,90 @@
+.modal {
+    top: 2em !important;
+    bottom: 2em !important;
+    left: 1em !important;
+    right: 1em !important;
+    margin-top: 0;
+    max-height: 540px; /* backwards compatible */
+    max-height: calc(100vh);
+}
+.modal {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    z-index: 1050;
+    width: 560px;
+    margin-left: -280px;
+    background-color: #fff !important;
+    border: 1px solid #999 !important;
+    border: 1px solid rgba(0,0,0,.3) !important;
+    -webkit-border-radius: 6px !important;
+    -moz-border-radius: 6px !important;
+    border-radius: 6px !important;
+    outline: 0 !important;
+    -webkit-box-shadow: 0 3px 7px rgba(0,0,0,.3) !important;
+    -moz-box-shadow: 0 3px 7px rgba(0,0,0,.3) !important;
+    box-shadow: 0 3px 7px rgba(0,0,0,.3) !important;
+    -webkit-background-clip: padding-box !important;
+    -moz-background-clip: padding-box !important;
+    background-clip: padding-box !important;
+}
+.modal-header {
+    display: block;
+}
+.modal-wide {
+    width: 96%;
+    left: 2%;
+    margin: auto auto auto auto;
+}
+.modal-body {
+    max-height: 400px; /* backwards compatible */
+    max-height: calc(100vh - (4em + 49px + 60px + 30px));
+    overflow-y: scroll;
+}
+.modal-footer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: white;
+}
+
+.modal-backdrop, .modal-backdrop.fade.in {
+    opacity: .8;
+    filter: alpha(opacity=80);
+}
+.modal-backdrop.fade {
+    opacity: 0;
+}
+.fade.in {
+    opacity: 1;
+}
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: #000;
+}
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity .15s linear;
+    -moz-transition: opacity .15s linear;
+    -o-transition: opacity .15s linear;
+    transition: opacity .15s linear;
+}
+.modal.fade.in {
+    top: 10%;
+}
+.modal.fade {
+    top: -25%;
+    -webkit-transition: opacity .3s linear,top .3s ease-out;
+    -moz-transition: opacity .3s linear,top .3s ease-out;
+    -o-transition: opacity .3s linear,top .3s ease-out;
+    transition: opacity .3s linear,top .3s ease-out;
+}
+.fade.in {
+    opacity: 1;
+}

@@ -31,6 +31,11 @@ class DPAddPerformer extends DPFeature {
 
 			// Give the performer the ability to be dragged.
 			newPerf.onMouseDrag = function(event) {
+				var chartIdx = dpEditor.getActiveChartIdx();
+				var chart = dpEditor.getDPChart(chartIdx);
+				var countIdx = chart.getActiveCountIdx();
+				var chartId = chart.getChartId();
+
 				// update the position visually
 				if (event.event.shiftKey) {
 					// "snap to grid. i.e. round to something divisible by pps"
@@ -42,7 +47,15 @@ class DPAddPerformer extends DPFeature {
 				this.updateDrillNumberPosition();
 				// TO-DO:
 				// Update the position for the active chart & count
+				this.getPositionSet(chartId, countIdx).x = this.position.x;
+				this.getPositionSet(chartId, countIdx).y = this.position.y;
 			}
+
+			// Set the position in the performer's positionSet
+			var chartIdx = dpEditor.getActiveChartIdx();
+			var chart = dpEditor.getDPChart(chartIdx);
+			// set current position for activeCountIdx in the current activeChart
+			newPerf.setPositionSet(position, chart.getChartId(), chart.getActiveCountIdx());
 
 			// Add this new performer to the editor
 			dpEditor.setDPPerformer( newPerf );

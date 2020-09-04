@@ -113,7 +113,7 @@ class DPPerformer extends paper.PointText {
 	}
 
 	// POSITIONSET
-	setPositions(obj) {
+	setPositionSets(obj) {
 		if (typeof(obj) === 'object') {
 			this.positionSet = JSON.parse(JSON.stringify(obj));
 			return true;
@@ -121,7 +121,7 @@ class DPPerformer extends paper.PointText {
 		return false;
 	};
 	// Set a <Point> for given count in a given chart
-	setPosition(val, chartId, countIdx, insert) {
+	setPositionSet(val, chartId, countIdx, insert) {
 		if (chartId === undefined) {
 			// we cannot set a position if we do not know the chart
 			return false;
@@ -143,12 +143,36 @@ class DPPerformer extends paper.PointText {
 
 		if (val !== null && typeof(val) === 'object' && val.constructor === paper.Point) {
 			if (countIdx >= 0 && countIdx <= this.positionSet[chartId].length) {
-				if (insert || this.removepositionSet(chartId, countIdx)) {
+				if (insert || this.removePositionSet(chartId, countIdx)) {
 					this.positionSet[chartId].splice(countIdx, 0, val);
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+	removePositionSet(chartId, countIdx) {
+		if (chartId === undefined) {
+			return false;
+		}
+		// We are deleting the whole chart
+		if (countIdx === undefined) {
+			delete this.positionSet[chartId];
+		} else if (countIdx >=0 && countIdx < this.positionSet[chartId].length) {
+			// we are only deleting the specified count
+			this.positionSet[chartId].splice(countIdx, 1);
+		}
+		return true;
+	}
+	getPositionSets() {
+		return this.positionSet;
+	}
+	// Returns the array of all positions for each count of the given ChartId
+	getPositionSets(chartId) {
+		return this.positionSet[chartId];
+	}
+	// Returns a PaperJS Point object
+	getPositionSet(chartId, countIdx) {
+		return this.positionSet[chartId][countIdx];
 	}
 }

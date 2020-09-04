@@ -23,6 +23,8 @@ class DPAddPerformer extends DPFeature {
 			});
 			// this needs to be reset because adding the Content shifts the size of the bounding box
 			newPerf.position = position;
+			// we manually updated position, so update the DrillNum position too
+			newPerf.updateDrillNumberPosition();
 
 			// Give the performer the ability to be dragged.
 			newPerf.onMouseDrag = function(event) {
@@ -33,6 +35,8 @@ class DPAddPerformer extends DPFeature {
 				} else {
 					this.position = this.position.add(event.delta);
 				}
+				// update the drillNumber position
+				this.updateDrillNumberPosition();
 				// TO-DO:
 				// Update the position for the active chart & count
 			}

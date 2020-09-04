@@ -15,6 +15,9 @@ class DPAddPerformer extends DPFeature {
 			
 			var newPerf = new DPPerformer({
 				'performerId': uuidv4(),
+				'drillNumber': {
+					number: dpEditor.getDPPerformers().length + 1
+				},
 				// Set some of the Paper PointText properties
 				content: 'X',
 				point: position,

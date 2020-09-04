@@ -5,7 +5,14 @@ class DPAddPerformer extends DPFeature {
 
 	onclick() {
 		dpEditor.view.onMouseUp = function(event) {
-			var position = event.point;
+			var position;
+			if (event.event.shiftKey) {
+				// "snap to grid. i.e. round to something divisible by pps"
+				position = new paper.Point( [Math.round(event.point.x/dpEditor.settings.pps)*dpEditor.settings.pps, Math.round(event.point.y/dpEditor.settings.pps)*dpEditor.settings.pps] );
+			} else {
+				position = event.point;
+			}
+			
 			var newPerf = new DPPerformer({
 				'performerId': uuidv4(),
 				// Set some of the Paper PointText properties
@@ -20,7 +27,12 @@ class DPAddPerformer extends DPFeature {
 			// Give the performer the ability to be dragged.
 			newPerf.onMouseDrag = function(event) {
 				// update the position visually
-				this.position = this.position.add(event.delta);
+				if (event.event.shiftKey) {
+					// "snap to grid. i.e. round to something divisible by pps"
+					this.position = [Math.round(event.point.x/dpEditor.settings.pps)*dpEditor.settings.pps, Math.round(event.point.y/dpEditor.settings.pps)*dpEditor.settings.pps];
+				} else {
+					this.position = this.position.add(event.delta);
+				}
 				// TO-DO:
 				// Update the position for the active chart & count
 			}

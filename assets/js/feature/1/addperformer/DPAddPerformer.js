@@ -40,6 +40,9 @@ class DPAddPerformer extends DPFeature {
 				// TO-DO:
 				// Update the position for the active chart & count
 			}
+
+			// Add this new performer to the editor
+			dpEditor.setDPPerformer( newPerf );
 		}
 	}
 

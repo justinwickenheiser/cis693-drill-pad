@@ -630,6 +630,48 @@ class DPEditor {
 		$(dpEditor.ui.chartHeader.settings[0].children[0]).click();
 	}
 
+	// DPPERFORMERS
+	setDPPerformers(obj) {
+		if (Array.isArray(obj)) {
+			this.dpPerformer = [];
+			var idx;
+			for (idx = 0; idx < obj.length; idx++) {
+				this.setDPPerformer(obj[idx], idx);
+			}
+			return true;
+		}
+		return false;
+	};
+	setDPPerformer(val, idx, insert) {
+		if (idx === undefined) {
+			idx = this.dpPerformer.length;
+		}
+		if (insert === undefined) {
+			insert = false; // replace
+		}
+		if (val !== null && typeof(val) === 'object' && val.constructor === DPPerformer) {
+			if (idx >= 0 && idx <= this.dpPerformer.length) {
+				if (insert || this.removeDPPerformer(idx)) {
+					this.dpPerformer.splice(idx, 0, val);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	removeDPPerformer(idx) {
+		if (idx >=0 && idx < this.dpPerformer.length) {
+			this.dpPerformer.splice(idx, 1);
+		}
+		return true;
+	}
+	getDPPerformers() {
+		return this.dpPerformer;
+	}
+	getDPPerformer(idx) {
+		return this.dpPerformer[idx];
+	}
+
 	// Reset the View from PanZoom
 	resetView() {
 		this.view.zoom = 1;

@@ -9,6 +9,10 @@ class DPPerformer extends paper.PointText {
 		// angle: 180 // left
 	};
 	drillNumberElement = null; // PaperJS Group
+	positionSet = {
+		// chartId: [ <Point> ] --> each <Point> matches w/ the Count in the chartId. Therefore
+		//		the length of the array = # counts in chart + 1 (+1 for the initial position index [0])
+	}
 
 	constructor(obj) {
 		super(obj);
@@ -106,6 +110,45 @@ class DPPerformer extends paper.PointText {
 		line.add(this.position);
 		line.add(this.position.add(linePoint));
 		this.bringToFront();
+	}
 
+	// POSITIONSET
+	setPositions(obj) {
+		if (typeof(obj) === 'object') {
+			this.positionSet = JSON.parse(JSON.stringify(obj));
+			return true;
+		}
+		return false;
+	};
+	// Set a <Point> for given count in a given chart
+	setPosition(val, chartId, countIdx, insert) {
+		if (chartId === undefined) {
+			// we cannot set a position if we do not know the chart
+			return false;
+		}
+
+		// If the chartId is not in the positionSet object, create it w/ an empty array.
+		if (this.positionSet[chartId] === undefined) {
+			this.positionSet[chartId] = [];
+			// TO-DO:
+			// I don't know if this would ever happen, but if that chart has counts > 0, we need to initialize the positionSet for the chart
+		}
+
+		if (countIdx === undefined) {
+			countIdx = this.positionSet[chartId].length;
+		}
+		if (insert === undefined) {
+			insert = false; // replace
+		}
+
+		if (val !== null && typeof(val) === 'object' && val.constructor === paper.Point) {
+			if (countIdx >= 0 && countIdx <= this.positionSet[chartId].length) {
+				if (insert || this.removepositionSet(chartId, countIdx)) {
+					this.positionSet[chartId].splice(countIdx, 0, val);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

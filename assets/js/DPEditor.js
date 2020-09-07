@@ -693,6 +693,10 @@ class DPEditor {
 				case DP.LOGIC.TRIM_POSITIONS.CODE:
 					perf.trimPositionSet(obj.chartId, obj.counts);
 					break;
+				case DP.LOGIC.DRAW_POSITION.CODE:
+					perf.position = perf.getPositionSet(obj.chartId, obj.countIdx);
+					perf.updateDrillNumberPosition();
+					break;
 				default:
 					throw "DPEditor.applyToPerformers: Invalid Method."
 			}
@@ -709,11 +713,23 @@ class DPEditor {
 		if (this.dpChart.length) {
 			var chartIdx = this.getActiveChartIdx();
 			var dpChart = this.dpChart[chartIdx];
+			var chartId = dpChart.getChartId();
 			var countIdx = dpChart.getActiveCountIdx();
 
 			// Set the Chart Header information
 			document.getElementById('chartNumber').innerText = dpChart.getChartNumber().toString() + ' / ' + this.dpChart.length;
 			document.getElementById('countNumber').innerText = countIdx.toString() + ' / ' + dpChart.getCounts().toString();
+
+			// ====================================
+			// For every performer in the editor, 
+			// set their position to be the 
+			// position for this (Chart,Count) 
+			// from their lookup table
+			// ====================================
+			this.applyToPerformers(DP.LOGIC.DRAW_POSITION.CODE, {
+				chartId: chartId,
+				countIdx: countIdx
+			});
 		}
 	}
 }

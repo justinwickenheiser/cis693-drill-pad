@@ -27,6 +27,10 @@ class DP {
 			CODE: 15,
 			PARAMS: ['chartId','counts']
 		},
+		DRAW_POSITION: {
+			CODE: 16,
+			PARAMS: ['chartId','countIdx']
+		},
 	}
 
 	// pps: Pixels per Step

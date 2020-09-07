@@ -12,6 +12,9 @@ class DPEditor {
 		'toolbar': {
 			// parent
 		},
+		'controls': {
+			// parent,
+		},
 		'modal': {
 			// the modal to house DPFeature getFormDom()
 		}
@@ -286,6 +289,11 @@ class DPEditor {
 		}).appendTo(dpEditor.ui.parent);
 		//'width': '980', // This #px is set based on # lines * pps
 		//'height': '550', // This #px is set based on # lines * pps
+
+		// Controls Container
+		dpEditor.ui.controls.parent = $('<div>', {
+			'class': dpEditor.ui.class + '-controls'
+		}).appendTo(dpEditor.ui.parent);
 
 		// Prepare ui.toolbar
 		

@@ -175,4 +175,66 @@ class DPPerformer extends paper.PointText {
 	getPositionSet(chartId, countIdx) {
 		return this.positionSet[chartId][countIdx];
 	}
+	initializePositionSets(dpEditor) {
+		// ===========================================
+		// Loop through every chart in the editor and
+		// trimPositionSet for each chart. This should
+		// be called when a performer is added.
+		// ===========================================
+		if (dpEditor !== null && typeof(dpEditor) === 'object' && dpEditor.constructor === DPEditor) {
+			var charts = dpEditor.getDPCharts();
+			// loop through every chart
+			for (var i = 0; i < charts.length; i++) {
+				// get chartId and counts for the current chart in loop
+				var chart = charts[i];
+				var chartId = chart.getChartId();
+				var counts = chart.getCounts();
+				this.trimPositionSet(chartId, counts);
+			}
+			return true;
+		}
+		return false;
+	}
+	trimPositionSet(chartId, counts) {
+		// ===========================================
+		// Set the performer's array of positions for 
+		// given chartId to be equal to the number of
+		// counts + 1. The + 1 accounts for the
+		// initial position (index [0]).
+		// ===========================================
+
+		if (chartId === undefined ) {
+			// we musts have a valid chart that exists.
+			return false;
+		}
+		if (this.positionSet[chartId] === undefined) {
+			// this is a new chart, 
+			this.positionSet[chartId] = []
+			// TO-DO:
+			// so we need to set the initial position to last position of the previous chart.
+			
+		}
+		if (counts === undefined) {
+			counts = 0;
+		}
+
+		var currentPositions = this.positionSet[chartId].length;
+		var neededPositions = counts+1;
+		if (currentPositions < neededPositions) {
+			// add a position that matches the current last position for the chart
+			// for now, let's just pad them w/ [0,0]
+			for (var idx = currentPositions; idx < neededPositions; idx++) {
+				this.setPositionSet(new paper.Point([0,0]), chartId, idx);
+			}
+			return true;
+		} else if (currentPositions > neededPositions && currentPositions > 1) {
+			// check for currentPositions > 1  because it will be 1 when there are 0 counts and we don't want to delete that
+			// remove the end ones
+			for (idx = currentPositions-1; idx > counts; idx--) {
+				this.removePositionSet(chartId, idx);
+			}
+			return true;
+		}
+		return false;
+	}
 }

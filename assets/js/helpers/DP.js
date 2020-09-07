@@ -22,6 +22,12 @@ class DP {
 		COLLEGE: 8,
 		HS: 9,
 	};
+	static LOGIC = {
+		TRIM_POSITIONS: {
+			CODE: 15,
+			PARAMS: ['chartId','counts']
+		},
+	}
 
 	// pps: Pixels per Step
 	static drawField(pps, obj) {

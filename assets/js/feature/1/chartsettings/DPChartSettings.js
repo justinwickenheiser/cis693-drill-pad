@@ -59,11 +59,15 @@ class DPChartSettings extends DPFeature {
 
 		// TO-DO:
 		// After setting the counts, we need to make sure every performer has the correct (new) number of counts for the given chart
-		// Situations:
-		//		
+		dpEditor.applyToPerformers(DP.LOGIC.TRIM_POSITIONS.CODE, {
+			chartId: chartId,
+			counts: counts
+		});
+
 
 		dpEditor.clearActiveFeature();
 		dpEditor.redraw();
+		console.log(dpEditor);
 	}
 
 }

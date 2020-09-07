@@ -625,6 +625,12 @@ class DPEditor {
 
 		// Add the new chart to the editor
 		dpEditor.setDPChart(newChart);
+
+		// Give every performer this new chart w/ 0 positions (1 -- initial position)
+		dpEditor.applyToPerformers(DP.LOGIC.TRIM_POSITIONS.CODE, {
+			chartId: newChartId,
+			counts: 0
+		});
 		
 		// call the chart settings feature
 		$(dpEditor.ui.chartHeader.settings[0].children[0]).click();
@@ -670,6 +676,27 @@ class DPEditor {
 	}
 	getDPPerformer(idx) {
 		return this.dpPerformer[idx];
+	}
+
+	// There are likely to be many things that should happen to all performers or maybe all selected performers.
+	// This method will loop over every performer (or selected performers only) and apply the logic based on the desired method
+	applyToPerformers(method, obj, selectedOnly) {
+		if (selectedOnly === undefined) {
+			selectedOnly = false; // apply to all performers
+		}
+
+		var performers = this.getDPPerformers();
+		for (i = 0; i < performers.length; i++) {
+			var perf = performers[i];
+
+			switch (method) {
+				case DP.LOGIC.TRIM_POSITIONS.CODE:
+					perf.trimPositionSet(obj.chartId, obj.counts);
+					break;
+				default:
+					throw "DPEditor.applyToPerformers: Invalid Method."
+			}
+		}
 	}
 
 	// Reset the View from PanZoom

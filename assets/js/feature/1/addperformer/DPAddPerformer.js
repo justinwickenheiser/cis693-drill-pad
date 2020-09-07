@@ -54,6 +54,8 @@ class DPAddPerformer extends DPFeature {
 			// Set the position in the performer's positionSet
 			var chartIdx = dpEditor.getActiveChartIdx();
 			var chart = dpEditor.getDPChart(chartIdx);
+			// initialize this performer w/ empty [0,0] point for all charts
+			newPerf.initializePositionSets(dpEditor);
 			// set current position for activeCountIdx in the current activeChart
 			newPerf.setPositionSet(position, chart.getChartId(), chart.getActiveCountIdx());
 

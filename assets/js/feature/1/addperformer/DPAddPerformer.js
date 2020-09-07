@@ -58,6 +58,10 @@ class DPAddPerformer extends DPFeature {
 				// there was no drag, so it was a simple click
 				to = from;
 			}
+			// let's set the From to be the topLeft * the To to bottomRight
+			from = path.bounds.topLeft;
+			to = path.bounds.bottomRight;
+
 			var spacingFB = parseInt($('#spacingFB').val());
 			var spacingLR = parseInt($('#spacingLR').val());
 			var symbol = $('#symbol').val();
@@ -72,8 +76,6 @@ class DPAddPerformer extends DPFeature {
 			var rows = Math.floor(from.subtract(new paper.Point(from.x, to.y)).length / (spacingFB*dpEditor.settings.pps)) + 1;
 			// divid the length of the horizontal line by the space * pps. Then add 1 for the initial column.
 			var cols = Math.floor(from.subtract(new paper.Point(to.x, from.y)).length / (spacingLR*dpEditor.settings.pps)) + 1;
-
-
 
 			for (var r = 0; r < rows; r++) {
 				for (var c = 0; c < cols; c++) {

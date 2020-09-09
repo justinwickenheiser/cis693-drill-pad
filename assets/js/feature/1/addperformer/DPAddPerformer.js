@@ -58,9 +58,12 @@ class DPAddPerformer extends DPFeature {
 				// there was no drag, so it was a simple click
 				to = from;
 			}
-			// let's set the From to be the topLeft * the To to bottomRight
-			from = path.bounds.topLeft;
-			to = path.bounds.bottomRight;
+			// path is undefined if there was no drag (simple click)
+			if (path != undefined) {
+				// let's set the From to be the topLeft * the To to bottomRight
+				from = path.bounds.topLeft;
+				to = path.bounds.bottomRight;
+			}
 
 			var spacingFB = parseInt($('#spacingFB').val());
 			var spacingLR = parseInt($('#spacingLR').val());
@@ -104,19 +107,49 @@ class DPAddPerformer extends DPFeature {
 						var chart = dpEditor.getDPChart(chartIdx);
 						var countIdx = chart.getActiveCountIdx();
 						var chartId = chart.getChartId();
-
-						// update the position visually
-						if (event.event.shiftKey) {
-							// "snap to grid. i.e. round to something divisible by pps"
-							this.position = [Math.round(event.point.x/dpEditor.settings.pps)*dpEditor.settings.pps, Math.round(event.point.y/dpEditor.settings.pps)*dpEditor.settings.pps];
+						
+						// is the performer in the selectedPerformer set? AND are there more performers that are selected?
+						var isSelected = this.selected; // .selected is a paperJs property
+						if (isSelected && Object.keys(dpEditor.getSelectedPerformers()).length > 1) {
+							dpEditor.applyToPerformers(DP.LOGIC.DRAG_PERFORMERS.CODE, {
+								delta: event.delta,
+								chartId: chartId,
+								countIdx: countIdx
+							}, true);
+							// =========================================
+							// In this case, we will not snap-to-grid
+							// if there are multiple selected performers
+							// this is because rounding/applying a delta
+							// is confusing.
+							// =========================================
 						} else {
-							this.position = this.position.add(event.delta);
+							// update the position visually
+							if (event.event.shiftKey) {
+								// "snap to grid. i.e. round to something divisible by pps"
+								this.position = [Math.round(event.point.x/dpEditor.settings.pps)*dpEditor.settings.pps, Math.round(event.point.y/dpEditor.settings.pps)*dpEditor.settings.pps];
+							} else {
+								this.position = this.position.add(event.delta);
+							}
+							// update the drillNumber position
+							this.updateDrillNumberPosition();
+							// Update the position for the active chart & count
+							this.setPositionSet(this.position, chartId, countIdx);
+							// this.getPositionSet(chartId, countIdx).x = this.position.x;
+							// this.getPositionSet(chartId, countIdx).y = this.position.y;
 						}
-						// update the drillNumber position
-						this.updateDrillNumberPosition();
-						// Update the position for the active chart & count
-						this.getPositionSet(chartId, countIdx).x = this.position.x;
-						this.getPositionSet(chartId, countIdx).y = this.position.y;
+					}
+
+					// When clicked they will be selected/deselected
+					// this is a Command + click or Windows + Click
+					newPerf.onClick = function(event) {
+						if ( event.event.metaKey ) {
+							if (this.selected) {
+								dpEditor.removeSelectedPerformer(this.performerId);
+							} else {
+								dpEditor.setSelectedPerformer(this);
+							}
+							this.selected = !this.selected;
+						}
 					}
 
 					// Set the position in the performer's positionSet

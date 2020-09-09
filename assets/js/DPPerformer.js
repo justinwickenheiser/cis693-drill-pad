@@ -141,7 +141,7 @@ class DPPerformer extends paper.PointText {
 			insert = false; // replace
 		}
 
-		if (val !== null && typeof(val) === 'object' && val.constructor === paper.Point) {
+		if (val !== null && typeof(val) === 'object') {
 			if (countIdx >= 0 && countIdx <= this.positionSet[chartId].length) {
 				if (insert || this.removePositionSet(chartId, countIdx)) {
 					this.positionSet[chartId].splice(countIdx, 0, val);

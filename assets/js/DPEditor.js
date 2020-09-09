@@ -27,6 +27,7 @@ class DPEditor {
 	dpPerformer = [];
 	activeChartIdx = null;
 	activeFeature = null;
+	selectedPerformers = {};
 	view = null; // This is the Paper Project's View Object
 	settings = {
 		'pps': 5
@@ -410,6 +411,14 @@ class DPEditor {
 				'object': 'DPPointer'
 			},
 			{
+				'folder': 'select',
+				'featureId': uuidv4(),
+				'icon': 'pencil',
+				'title': 'Select',
+				'buttonSetting': 'active',
+				'object': 'DPSelect'
+			},
+			{
 				'folder': 'resetpz',
 				'featureId': uuidv4(),
 				'icon': 'search',
@@ -686,6 +695,22 @@ class DPEditor {
 		return this.dpPerformer[idx];
 	}
 
+	// SELECTEDPERFORMERS
+	setSelectedPerformer(dpPerformer) {
+		this.selectedPerformers[dpPerformer.getPerformerId()] = dpPerformer;
+		return true;
+	}
+	getSelectedPerformers() {
+		return this.selectedPerformers;
+	}
+	removeSelectedPerformer(performerId) {
+		delete this.selectedPerformers[performerId];
+	}
+	clearSelectedPerformers() {
+		this.applyToPerformers(DP.LOGIC.CLEAR_SELECTED.CODE)
+		this.selectedPerformers = {};
+	}
+
 	// There are likely to be many things that should happen to all performers or maybe all selected performers.
 	// This method will loop over every performer (or selected performers only) and apply the logic based on the desired method
 	applyToPerformers(method, obj, selectedOnly) {
@@ -693,7 +718,16 @@ class DPEditor {
 			selectedOnly = false; // apply to all performers
 		}
 
-		var performers = this.getDPPerformers();
+		var performers = [];
+		if (selectedOnly) {
+			var p = this.getSelectedPerformers();
+			Object.keys(p).forEach(function (performerId) {
+				performers.push(p[performerId]);
+			});
+		} else {
+			performers = this.getDPPerformers();
+		}
+		
 		for (i = 0; i < performers.length; i++) {
 			var perf = performers[i];
 
@@ -704,6 +738,15 @@ class DPEditor {
 				case DP.LOGIC.DRAW_POSITION.CODE:
 					perf.position = perf.getPositionSet(obj.chartId, obj.countIdx);
 					perf.updateDrillNumberPosition();
+					break;
+				case DP.LOGIC.CLEAR_SELECTED.CODE:
+					perf.selected = false;
+					break;
+				case DP.LOGIC.DRAG_PERFORMERS.CODE:
+					perf.position = perf.position.add(obj.delta);
+					perf.updateDrillNumberPosition();
+					// also update the position for the active chart & count
+					perf.setPositionSet(perf.position, obj.chartId, obj.countIdx);
 					break;
 				default:
 					throw "DPEditor.applyToPerformers: Invalid Method."

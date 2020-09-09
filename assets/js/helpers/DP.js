@@ -31,6 +31,14 @@ class DP {
 			CODE: 16,
 			PARAMS: ['chartId','countIdx']
 		},
+		CLEAR_SELECTED: {
+			CODE: 17,
+			PARAMS: []
+		},
+		DRAG_PERFORMERS: {
+			CODE: 18,
+			PARAMS: ['delta','chartId','countIdx']
+		}
 	}
 
 	// pps: Pixels per Step

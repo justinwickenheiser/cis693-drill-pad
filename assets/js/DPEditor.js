@@ -30,7 +30,8 @@ class DPEditor {
 	selectedPerformers = {};
 	view = null; // This is the Paper Project's View Object
 	settings = {
-		'pps': 5
+		'pps': 5,
+		'hash': DP.HASH.COLLEGE
 	}
 
 	constructor(id, obj) {
@@ -427,6 +428,14 @@ class DPEditor {
 				'object': 'DPResetPZ'
 			},
 			{
+				'folder': 'editorsettings',
+				'featureId': uuidv4(),
+				'icon': 'cogs',
+				'title': 'Editor Settings',
+				'buttonSetting': 'default',
+				'object': 'DPEditorSettings'
+			},
+			{
 				'folder': 'chartsettings',
 				'featureId': uuidv4(),
 				'icon': 'cog',
@@ -437,7 +446,7 @@ class DPEditor {
 		];
 
 		for (var i = 0; i < tempFeatures.length; i++) {
-			if (tempFeatures[i].object !== 'DPChartSettings') {
+			if (tempFeatures[i].object !== 'DPEditorSettings' && tempFeatures[i].object !== 'DPChartSettings') {
 				fnLoad(tempFeatures[i], dpEditor.ui.toolbar.feature);
 			} else {
 				// The DPChartSettings needs to be appended in a different area.

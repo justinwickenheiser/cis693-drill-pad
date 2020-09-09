@@ -109,7 +109,7 @@ class DPPerformer extends paper.PointText {
 		line.removeSegments();
 		line.add(this.position);
 		line.add(this.position.add(linePoint));
-		this.bringToFront();
+		this.drillNumberElement.sendToBack();
 	}
 
 	// POSITIONSET
@@ -223,8 +223,13 @@ class DPPerformer extends paper.PointText {
 		if (currentPositions < neededPositions) {
 			// add a position that matches the current last position for the chart
 			// for now, let's just pad them w/ [0,0]
+			var previousPosition = this.getPositionSet(chartId, currentPositions-1);
 			for (var idx = currentPositions; idx < neededPositions; idx++) {
-				this.setPositionSet(new paper.Point([0,0]), chartId, idx);
+				if (previousPosition != undefined) {
+					this.setPositionSet(previousPosition, chartId, idx);
+				} else {
+					this.setPositionSet(new paper.Point([0,0]), chartId, idx);
+				}
 			}
 			return true;
 		} else if (currentPositions > neededPositions && currentPositions > 1) {

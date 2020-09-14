@@ -280,6 +280,90 @@ class DPPerformer extends paper.PointText {
 		 * Check https://github.com/justinwickenheiser/cis693-drill-pad/wiki/Move-Pattern-Sets for more details
 		 * on how a PatternSet is structured.
 		 */
-		
+		var newCountIdx = countIdx;
+		var newCountIdxPosition = this.getPositionSet(chartId, countIdx);
+		var remainingCounts = patternSet.counts;
+		var buildRef = new Point([0,0]);
+
+		// Loop throught each pattern
+		for (var patternIdx = 0; patternIdx < patternSet.patterns.length; patternIdx++) {
+			var ptrnObj = patternSet.patterns[patternIdx];
+			var patternCounts = 0;
+			var hitReference = false;
+			var useReference = ((ptrnObj.reference !== undefined && ptrnObj.reference !== null) ? true : false);
+
+			// how many counts are in this pattern?
+			for (var mvSetIdx = 0; mvSetIdx < ptrnObj.pattern.length; mvSetIdx++) {
+				patternCounts += ptrnObj.pattern[mvSetIdx].counts;
+			}
+
+			// Do we use a reference for this pattern? If so, it's business as usual
+			if (useReference) {
+				// Do a pre-check to see if we happen to start on the reference point
+				buildRef.x = ( ptrnObj.reference.dimension.x ? newCountIdxPosition.x : ptrnObj.reference.point.x );
+				buildRef.y = ( ptrnObj.reference.dimension.y ? newCountIdxPosition.y : ptrnObj.reference.point.y );
+				if (buildRef.subtract(ptrnObj.reference.point).length == 0) {
+					hitReference = true;
+				}
+
+				// If we haven't met the reference poinst AND we have enough counts for 1 more round through the pattern
+				// patternCounts > 0 is there to help prevent an infinit loop
+				while (!hitReference && remainingCounts >= patternCounts && patternCounts > 0) {
+					// apply the pattern
+					this.applyMoveSetArray(ptrnObj.pattern, chartId, newCountIdx);
+					// reduce the remainingCounts
+					remainingCounts -= patternCounts;
+					// we need to set the newCountIdx to be the last count the applyMoveSet created
+					newCountIdx += patternCounts;
+					newCountIdxPosition = this.getPositionSet(chartId, newCountIdx);
+
+					// now check against the reference
+					buildRef.x = ( ptrnObj.reference.dimension.x ? newCountIdxPosition.x : ptrnObj.reference.point.x );
+					buildRef.y = ( ptrnObj.reference.dimension.y ? newCountIdxPosition.y : ptrnObj.reference.point.y );
+					// the vector length of the difference between this built ref point and the desired ref point
+					if (buildRef.subtract(ptrnObj.reference.point).length == 0) {
+						hitReference = true;
+					}
+				}
+
+				// There is a chance we never met the reference point, but still have remainingCounts if the pattern
+				// has more counts than there are remaining.
+				// IMPORTANT: This method assumes a full run through the pattern before finishing remaining.
+				// I should figure out a nice way to handle this situation, but I will assume Future Me can do Math correctly
+				// when building the patternSet.pattern
+				if (hitReference) {
+					// if we hit the reference, then it is time to move to the next pattern. So do nothing
+				} else {
+					// we ran out available counts to run a full Pattern, but we never found the reference point
+					console.log("[ Error: Not enough counts remaining to apply the full pattern. Remaining: "+remainingCounts+". Counts in full pattern: "+patternCounts+". Reference Point never reached. ]");
+				}
+
+				// ==============================================
+				// We have finished looping through the pattern,
+				// because we have met one of two conditions:
+				// 		1. We hit the reference point
+				//		2. we ran out of available counts
+				// ==============================================
+			} else {
+				// This is when we do NOT use a reference for a pattern. In this case apply the pattern 1 time and 1 time only
+
+				if (remainingCounts >= patternCounts && patternCounts > 0) {
+					// apply the pattern
+					this.applyMoveSetArray(ptrnObj.pattern, chartId, newCountIdx);
+					// reduce the remainingCounts
+					remainingCounts -= patternCounts;
+					// we need to set the newCountIdx to be the last count the applyMoveSet created
+					newCountIdx += patternCounts;
+					newCountIdxPosition = this.getPositionSet(chartId, newCountIdx);
+				} else {
+					// we ran out available counts to run a full Pattern
+					console.log("[ Error: Not enough counts remaining to apply the full pattern. Remaining: "+remainingCounts+". Counts in full pattern: "+patternCounts+" ]");
+				}
+			}
+		}
+
+		// finish remaining counts using the final moveSet
+		patternSet.moveSet.counts = remainingCounts;
+		this.applyMoveSet(patternSet.moveSet, chartId, newCountIdx);
 	}
 }

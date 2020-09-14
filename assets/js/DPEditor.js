@@ -334,7 +334,7 @@ class DPEditor {
 
 		function fnLoad(obj, appendLocation) {
 			$.ajax({
-				'url': '/js/feature/1/' + obj.folder + '/' + obj.object + '.js',
+				'url': '/feature/1/' + obj.folder + '/' + obj.object + '.js',
 				'async': false,
 				'cache': false,
 				'success': function(data, textStatus, xhr) {

@@ -242,4 +242,44 @@ class DPPerformer extends paper.PointText {
 		}
 		return false;
 	}
+
+	// Applying Moves
+	applyMoveSet(moveSet, chartId, countIdx) {
+		// apply the moveSet using the position of current chart & count as starting position
+		var point = this.getPositionSet(chartId, countIdx);
+		/* moveSet = {
+		 *		move: Helpers.MOVE.<value>,
+		 *		counts: <number>,
+		 *		stepSize: <number>, [optional]
+		 *		pps: <number>, [optional]
+		 * }
+		 */
+		for (var count = 1; count <= moveSet.counts; count++) {
+			var p = DP.getNextPosition(point, moveSet.move, count, moveSet.stepSize, moveSet.pps);
+			this.setPositionSet(p , chartId, countIdx+count);
+		}
+	}
+	applyMoveSetArray(moveSetArray, chartId, countIdx) {
+		/* moveSetArray = [{
+		 *		move: Helpers.MOVE.<value>,
+		 *		counts: <number>,
+		 *		stepSize: <number>, [optional]
+		 *		pps: <number>, [optional]
+		 * }]
+		 */
+		var newCountIdx = countIdx;
+		for (var set = 0; set < moveSetArray.length; set++) {
+			// for each set, apply it to the point
+			this.applyMoveSet(moveSetArray[set], chartId, newCountIdx);
+			// we need to set the newCountIdx to be the last count the applyMoveSet created
+			newCountIdx += moveSetArray[set].counts;
+		}
+	}
+	applyPatternSet(patternSet, chartId, countIdx) {
+		/*
+		 * Check https://github.com/justinwickenheiser/cis693-drill-pad/wiki/Move-Pattern-Sets for more details
+		 * on how a PatternSet is structured.
+		 */
+		
+	}
 }

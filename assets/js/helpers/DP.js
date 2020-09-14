@@ -288,4 +288,69 @@ class DP {
 
 		return rtnLayer;
 	}
+
+	// Takes a Paper <Point> object
+	static getNextPosition(point, direction, offset, stepSize, pps) {
+		if (direction == undefined) {
+			direction = DP.MOVE.MT;
+		}
+		if (offset == undefined) {
+			offset = 1;
+		}
+		if (stepSize == undefined) {
+			stepSize = DP.STEP.STND;
+		}
+		if (pps == undefined) {
+			pps = 5;
+		}
+
+		var rtnVal;
+		if (direction == DP.MOVE.FM) {
+			if (stepSize === DP.STEP.STND) {
+				rtnVal = [point.x, point.y + (offset * pps)];
+			} else if (stepSize === DP.STEP.HALF) {
+				// 16-5 is half a regular step.
+				rtnVal = [point.x, point.y + ((offset * pps)/2)];
+			}
+		} else if (direction === DP.MOVE.BM) {
+			if (stepSize === DP.STEP.STND) {
+				rtnVal = [point.x, point.y - (offset * pps)];
+			} else if (stepSize === DP.STEP.HALF) {
+				// 16-5 is half a regular step.
+				rtnVal = [point.x, point.y - ((offset * pps)/2)];
+			}
+		} else if (direction === DP.MOVE.LT) {
+			if (stepSize === DP.STEP.STND) {
+				rtnVal = [point.x + (offset * pps), point.y];
+			} else if (stepSize === DP.STEP.HALF) {
+				// 16-5 is half a regular step.
+				rtnVal = [point.x + ((offset * pps)/2), point.y ];
+			}
+		} else if (direction === DP.MOVE.RT) {
+			if (stepSize === DP.STEP.STND) {
+				rtnVal = [point.x - (offset * pps), point.y];
+			} else if (stepSize === DP.STEP.HALF) {
+				// 16-5 is half a regular step.
+				rtnVal = [point.x - ((offset * pps)/2), point.y ];
+			}
+		} else if (direction === DP.MOVE.MT) {
+			rtnVal = [point.x, point.y];
+		} else if (direction === DP.OBLIQUE.FL) {
+			// FL = Towards South East corner (+x, +y)
+			rtnVal = [point.x + (offset * pps), point.y + (offset * pps)];
+		} else if (direction === DP.OBLIQUE.FR) {
+			// FR = Towards South West corner (-x, +y)
+			rtnVal = [point.x - (offset * pps), point.y + (offset * pps)];
+		} else if (direction === DP.OBLIQUE.BL) {
+			// BL = Towards North East corner (+x, -y)
+			rtnVal = [point.x + (offset * pps), point.y - (offset * pps)];
+		} else if (direction === DP.OBLIQUE.BR) {
+			// BR = Towards North West corner (-x, -y)
+			rtnVal = [point.x - (offset * pps), point.y - (offset * pps)];
+		}
+
+		// rtnVal has created as an [x, y] value. But return a Paper <Point>
+		return new paper.Point(rtnVal);
+
+	}
 }

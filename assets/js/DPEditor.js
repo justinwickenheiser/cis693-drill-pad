@@ -659,7 +659,7 @@ class DPEditor {
 		});
 		
 		// call the chart settings feature
-		$(dpEditor.ui.chartHeader.settings[0].children[0]).click();
+		$(dpEditor.ui.chartHeader.settings[0].children[1]).click();
 	}
 
 	// DPPERFORMERS

@@ -420,6 +420,14 @@ class DPEditor {
 				'object': 'DPSelect'
 			},
 			{
+				'folder': 'moveperformer',
+				'featureId': uuidv4(),
+				'icon': 'male',
+				'title': 'Move Performer',
+				'buttonSetting': 'active',
+				'object': 'DPMovePerformer'
+			},
+			{
 				'folder': 'resetpz',
 				'featureId': uuidv4(),
 				'icon': 'search',
@@ -756,6 +764,9 @@ class DPEditor {
 					perf.updateDrillNumberPosition();
 					// also update the position for the active chart & count
 					perf.setPositionSet(perf.position, obj.chartId, obj.countIdx);
+					break;
+				case DP.LOGIC.APPLY_MOVESETARRAY.CODE:
+					perf.applyMoveSetArray(obj.moveSetArray, obj.chartId, obj.countIdx);
 					break;
 				default:
 					throw "DPEditor.applyToPerformers: Invalid Method."

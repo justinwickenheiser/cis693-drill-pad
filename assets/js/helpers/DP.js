@@ -38,6 +38,10 @@ class DP {
 		DRAG_PERFORMERS: {
 			CODE: 18,
 			PARAMS: ['delta','chartId','countIdx']
+		},
+		APPLY_MOVESETARRAY: {
+			CODE: 19,
+			PARAMS: ['moveSetArray','chartId','countIdx']
 		}
 	}
 

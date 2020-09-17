@@ -42,7 +42,16 @@ class DP {
 		APPLY_MOVESETARRAY: {
 			CODE: 19,
 			PARAMS: ['moveSetArray','chartId','countIdx']
+		},
+		APPLY_PATTERNSET: {
+			CODE: 20,
+			PARAMS: ['patternSet','chartId','countIdx']
 		}
+	};
+	static FIELD_REFERENCE_ORDER = {
+		YARDLINE: ['0_left','5_left','10_left','15_left','20_left','25_left','30_left','35_left','40_left','45_left','50_center','45_right','40_right','35_right','30_right','25_right','20_right','15_right','10_right','5_right','0_right'],
+		SIDELINE: ['back_side_line','front_side_line'],
+		HASHLINE: ['back_hash_50_center','front_hash_50_center']
 	}
 
 	// pps: Pixels per Step
@@ -249,7 +258,8 @@ class DP {
 		// ======================================================
 		var fieldReferences = new paper.Group({
 			name: 'fieldReferences',
-			parent: rtnLayer
+			parent: rtnLayer,
+			visible: false
 		});
 		for (var i = 0; i < 21; i++) {
 			// Reference On Back Side Line
@@ -258,7 +268,6 @@ class DP {
 				radius: 3,
 				strokeColor: 'purple',
 				name: ( i < 10 ? 'back_sl_'+(5*i)+'_left' : ( i == 10 ?  'back_sl_50_center' : ( i%10 > 0 ? 'back_sl_' + ((5*i) - (10*(i%10))) + '_right' : 'back_sl_0_right' ) ) ),
-				visible: false,
 			}) );
 
 			// Reference On Back Hash
@@ -267,7 +276,6 @@ class DP {
 				radius: 3,
 				strokeColor: 'purple',
 				name: ( i < 10 ? 'back_hash_'+(5*i)+'_left' : ( i == 10 ?  'back_hash_50_center' : ( i%10 > 0 ? 'back_hash_' + ((5*i) - (10*(i%10))) + '_right' : 'back_hash_0_right' ) ) ),
-				visible: false,
 			}) );
 
 			// Reference On Front Hash
@@ -276,7 +284,6 @@ class DP {
 				radius: 3,
 				strokeColor: 'purple',
 				name: ( i < 10 ? 'front_hash_'+(5*i)+'_left' : ( i == 10 ?  'front_hash_50_center' : ( i%10 > 0 ? 'front_hash_' + ((5*i) - (10*(i%10))) + '_right' : 'front_hash_0_right' ) ) ),
-				visible: false,
 			}) );
 
 			// Reference On Front Side Line
@@ -285,7 +292,6 @@ class DP {
 				radius: 3,
 				strokeColor: 'purple',
 				name: ( i < 10 ? 'front_sl_'+(5*i)+'_left' : ( i == 10 ?  'front_sl_50_center' : ( i%10 > 0 ? 'front_sl_' + ((5*i) - (10*(i%10))) + '_right' : 'front_sl_0_right' ) ) ),
-				visible: false,
 			}) );
 
 		}
@@ -356,5 +362,85 @@ class DP {
 		// rtnVal has created as an [x, y] value. But return a Paper <Point>
 		return new paper.Point(rtnVal);
 
+	}
+
+
+	static buildFieldReferenceObject() {
+		var rtnVal = {};
+
+		for (var i = 0; i < 21; i++) {
+			if (i == 0) {
+				rtnVal["0_left"] = {
+					text: 'Left Goal Line',
+					dimension: {
+						x: true,
+						y: false
+					}
+				};
+			} else if (i < 10) {
+				rtnVal[(5*i)+'_left'] = {
+					text: 'Left ' + (5*i) + ' Yard Line',
+					dimension: {
+						x: true,
+						y: false
+					}
+				};
+			} else if (i == 10) {
+				rtnVal["50_center"] = {
+					text: '50 Yard Line',
+					dimension: {
+						x: true,
+						y: false
+					}
+				};
+			} else if (i < 20) {
+				rtnVal[((5*i) - (10*(i%10))) + '_right'] = {
+					text: 'Right ' + ((5*i) - (10*(i%10))) + ' Yard Line',
+					dimension: {
+						x: true,
+						y: false
+					}
+				};
+			} else if (i == 20) {
+				rtnVal["0_right"] = {
+					text: 'Right Goal Line',
+					dimension: {
+						x: true,
+						y: false
+					}
+				};
+			}
+		}
+
+		rtnVal['back_side_line'] = {
+			text: 'Back Side Line',
+			dimension: {
+				x: false,
+				y: true
+			}
+		};
+		rtnVal['front_side_line'] = {
+			text: 'Front Side Line',
+			dimension: {
+				x: false,
+				y: true
+			}
+		};
+		rtnVal['back_hash_50_center'] = {
+			text: 'Back Hash Line',
+			dimension: {
+				x: false,
+				y: true
+			}
+		};
+		rtnVal['front_hash_50_center'] = {
+			text: 'Fron Hash Line',
+			dimension: {
+				x: false,
+				y: true
+			}
+		};
+
+		return rtnVal;
 	}
 }

@@ -768,6 +768,9 @@ class DPEditor {
 				case DP.LOGIC.APPLY_MOVESETARRAY.CODE:
 					perf.applyMoveSetArray(obj.moveSetArray, obj.chartId, obj.countIdx);
 					break;
+				case DP.LOGIC.APPLY_PATTERNSET.CODE:
+					perf.applyPatternSet(obj.patternSet, obj.chartId, obj.countIdx);
+					break;
 				default:
 					throw "DPEditor.applyToPerformers: Invalid Method."
 			}

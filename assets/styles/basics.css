@@ -187,6 +187,88 @@ label.checkbox {
 	background: rgba(238,238,238,0.5); 
 }
 
+.btn-default {
+	background: #FFF;
+	border: 1px solid #999;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active {
+	background: rgba(238, 238, 238, 0.75);
+	border-color: #cccccc;
+}
+.btn-default.disabled {
+	color: #606060;
+	background: rgba(238, 238, 238, 0.5); 
+}
+.btn-default,
+.btn-default:visited {
+	color: #232323; 
+}
+.btn-success {
+	background: #008000;
+}
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active,
+.btn-success.active {
+	background: #FFF;
+	border-color: #008000;
+	color: #008000 !important;
+}
+.btn-success.disabled {
+	color: #606060 !important;
+	border: 1px solid #999;
+	background: rgba(238, 238, 238, 0.5);
+}
+.btn-danger {
+	background: #D50000;
+}
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active {
+	background: #FFF;
+	border-color: #D50000;
+	color: #D50000 !important;
+}
+.btn-danger.disabled {
+	color: #606060 !important;
+	border: 1px solid #999;
+	background: rgba(238, 238, 238, 0.5);
+}
+.btn-warning,
+.btn-warning:visited {
+	background-color: #f4d03f;
+	color: #000;
+	border: 1px solid #999;
+}
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning.active {
+	background: #FFF;
+	color: #8d6708 !important;
+	border-color: #8d6708;
+}
+.btn-warning.disabled {
+	color: #606060 !important;
+	border: 1px solid #999;
+	background: rgba(238, 238, 238, 0.5);
+}
+
+.well {
+	min-height: 20px;
+	padding: 19px;
+	margin-bottom: 20px;
+	background-color: #f5f5f5;
+	border: 1px solid #e3e3e3;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+}
+
 
 @media screen and (max-width:600px){
 	input,

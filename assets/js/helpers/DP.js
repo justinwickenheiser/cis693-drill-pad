@@ -439,7 +439,7 @@ class DP {
 			}
 		};
 		rtnVal['front_hash_50_center'] = {
-			text: 'Fron Hash Line',
+			text: 'Front Hash Line',
 			dimension: {
 				x: false,
 				y: true

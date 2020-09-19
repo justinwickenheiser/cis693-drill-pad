@@ -52,7 +52,13 @@ class DP {
 		YARDLINE: ['0_left','5_left','10_left','15_left','20_left','25_left','30_left','35_left','40_left','45_left','50_center','45_right','40_right','35_right','30_right','25_right','20_right','15_right','10_right','5_right','0_right'],
 		SIDELINE: ['back_side_line','front_side_line'],
 		HASHLINE: ['back_hash_50_center','front_hash_50_center']
-	}
+	};
+	static FNSET = {
+		DRAW_POINT: 21,
+		DRAW_CIRCLE: 22,
+		DRAW_RECTANGLE: 23,
+		DRAW_ARC: 24,
+	};
 
 	// pps: Pixels per Step
 	static drawField(pps, obj) {
@@ -364,7 +370,6 @@ class DP {
 
 	}
 
-
 	static buildFieldReferenceObject() {
 		var rtnVal = {};
 
@@ -440,6 +445,308 @@ class DP {
 				y: true
 			}
 		};
+
+		return rtnVal;
+	}
+
+	static getFnSet(desiredFnSet, obj) {
+		if (obj === undefined) {
+			obj = {};
+		}
+		if (obj.pps === undefined) {
+			obj.pps = 5;
+		}
+
+		var rtnVal = {
+			onMouseDown: null,
+			onMouseDrag: null,
+			onMouseUp: null
+		}
+		// Any path drawing might use this. It will automatically go to the activeLayer.
+		var path;
+		var center;
+		var from, to, through;
+		var layer = project.getItem({className: 'Layer', name: 'reference'});
+		if (!layer) {
+			layer = new paper.Layer({name: 'reference'});
+		}
+
+		switch (desiredFnSet) {
+			case DP.FNSET.DRAW_POINT:
+				// Draw a simple point (but to see it, it needs to be a tiny circle);
+				rtnVal.onMouseDown = function(event) {
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by pps"
+						center = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						center = event.point;
+					}
+					path = new paper.Path.Circle({
+						center: center,
+						radius: 3,
+						strokeColor: 'purple',
+						parent: layer,
+						data: {className:'refPoint'},
+						name: uuidv4()
+					});
+					path.onClick = function(event) {
+						this.selected = !this.selected;
+					}
+				}
+
+				rtnVal.onMouseDrag = null;
+				rtnVal.onMouseUp = null;
+				break;
+			case DP.FNSET.DRAW_CIRCLE:
+				rtnVal.onMouseDown = function(event) {
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by pps"
+						center = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						center = event.point;
+					}
+				}
+
+				rtnVal.onMouseDrag = function(event) {
+					// calculate the radius between center drag event.point
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by pps"
+						to = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						to = event.point;
+					}
+					var vector = to.subtract(center).length;
+					if (path != undefined) {
+						path.remove();
+					}
+					path = new paper.Path.Circle({
+						center: center,
+						radius: vector,
+						strokeColor: 'red',
+						dashArray: [10, 10],
+						parent: layer
+					});
+				}
+
+				rtnVal.onMouseUp = function(event) {
+					// calculate the radius between center drag event.point
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by pps"
+						to = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						to = event.point;
+					}
+					var vector = to.subtract(center).length;
+					if (path != undefined) {
+						path.remove();
+					}
+					// path is temporary. it was removed. create one that is permanent
+					var permanent = new paper.Path.Circle({
+						center: center,
+						radius: vector,
+						strokeColor: 'red',
+						dashArray: [10, 10],
+						data: {className:'refCircle'},
+						parent: layer,
+						name: uuidv4()
+					});
+					permanent.onClick = function(event) {
+						this.selected = !this.selected;
+					}
+
+					// handle if there are obj.numPoints
+					if (obj.numPoints !== undefined && obj.numPoints > 0) {
+						var offset = permanent.length / obj.numPoints;
+						for (var i = 0; i < obj.numPoints; i++) {
+							var point = permanent.getPointAt(offset * i);
+							var pt = new paper.Path.Circle({
+								center: point,
+								radius: 3,
+								strokeColor: 'purple',
+								parent: layer,
+								data: {className:'refPoint'},
+								name: uuidv4()
+							});
+							pt.onClick = function(event) {
+								this.selected = !this.selected;
+							}
+						}
+					}
+				};
+				break;
+			case DP.FNSET.DRAW_RECTANGLE:
+				rtnVal.onMouseDown = function(event) {
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by obj.pps"
+						from = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						from = event.point;
+					}
+				}
+
+				rtnVal.onMouseDrag = function(event) {
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by obj.pps"
+						to = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						to = event.point;
+					}
+					if (path != undefined) {
+						path.remove();
+					}
+					path = new paper.Path.Rectangle({
+						from: from,
+						to: to,
+						strokeColor: 'green',
+						dashArray: [10, 10],
+						parent: layer
+					});
+				}
+
+				rtnVal.onMouseUp = function(event) {
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by obj.pps"
+						to = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						to = event.point;
+					}
+					if (path != undefined) {
+						path.remove();
+					}
+					// path is temporary. it was removed. create one that is permanent
+					var permanent = new paper.Path.Rectangle({
+						from: from,
+						to: to,
+						strokeColor: 'green',
+						dashArray: [10, 10],
+						data: {className:'refRectangle'},
+						parent: layer,
+						name: uuidv4()
+					});
+					permanent.onClick = function(event) {
+						this.selected = !this.selected;
+					}
+
+					// handle if there are obj.numPoints
+					if (obj.spacingLR !== undefined && obj.spacingLR > 0 && obj.spacingFB !== undefined && obj.spacingFB > 0) {
+						// divid the length of the vertical line by the spacingFB * pps. Then add 1 for the initial row.
+						var rows = Math.floor(from.subtract(new paper.Point(from.x, to.y)).length / (obj.spacingFB*obj.pps)) + 1;
+						// divid the length of the horizontal line by the space * pps. Then add 1 for the initial column.
+						var cols = Math.floor(from.subtract(new paper.Point(to.x, from.y)).length / (obj.spacingLR*obj.pps)) + 1;
+
+						for (var r = 0; r < rows; r++) {
+							for (var c = 0; c < cols; c++) {
+								var position = new paper.Point([from.add([obj.spacingLR*c*obj.pps,obj.spacingFB*r*obj.pps]).x, from.add([obj.spacingLR*c*obj.pps,obj.spacingFB*r*obj.pps]).y]);
+								var pt = new paper.Path.Circle({
+									center: position,
+									radius: 3,
+									strokeColor: 'purple',
+									parent: layer,
+									data: {className:'refPoint'},
+									name: uuidv4()
+								});
+								pt.onClick = function(event) {
+									this.selected = !this.selected;
+								}
+							}
+						}
+					}
+				}
+				break;
+			case DP.FNSET.DRAW_ARC:
+				rtnVal.onMouseDown = function(event) {
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by obj.pps"
+						from = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						from = event.point;
+					}
+				}
+
+				rtnVal.onMouseDrag = function(event) {
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by obj.pps"
+						to = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						to = event.point;
+					}
+					if (obj.through == undefined) {
+						// default mid point of arc
+						var vector = to.subtract(from).divide(2).subtract(25);
+						through = from.add(vector);
+					} else {
+						through = obj.through;
+					}
+					if (path != undefined) {
+						path.remove();
+					}
+					path = new paper.Path.Arc({
+						from: from,
+						through: through,
+						to: to,
+						strokeColor: 'blue',
+						dashArray: [10, 5],
+						parent: layer
+					});
+				}
+				rtnVal.onMouseUp = function(event) {
+					if (event.event.shiftKey) {
+						// "snap to grid. i.e. round to something divisible by obj.pps"
+						to = new paper.Point( [Math.round(event.point.x/obj.pps)*obj.pps, Math.round(event.point.y/obj.pps)*obj.pps] );
+					} else {
+						to = event.point;
+					}
+					if (obj.through == undefined) {
+						// default mid point of arc
+						var vector = to.subtract(from).divide(2).subtract(25);
+						through = from.add(vector);
+					} else {
+						through = obj.through;
+					}
+					if (path != undefined) {
+						path.remove();
+					}
+
+					// path is temporary. it was removed. create one that is permanent
+					var permanent = new paper.Path.Arc({
+						from: from,
+						through: through,
+						to: to,
+						strokeColor: 'blue',
+						dashArray: [10, 5],
+						data: {className:'refArc'},
+						parent: layer
+					});
+					permanent.onClick = function(event) {
+						this.selected = !this.selected;
+					}
+
+					// handle if there are obj.numPoints
+					if (obj.numPoints !== undefined && obj.numPoints > 0) {
+						if (obj.numPoints == 1) {
+							var offset = permanent.length / obj.numPoints;
+						} else {
+							var offset = permanent.length / (obj.numPoints - 1);
+						}
+						
+						for (var i = 0; i < obj.numPoints; i++) {
+							var point = permanent.getPointAt(offset * i);
+							var pt = new paper.Path.Circle({
+								center: point,
+								radius: 3,
+								strokeColor: 'purple',
+								parent: layer,
+								data: {className:'refPoint'},
+								name: uuidv4()
+							});
+							pt.onClick = function(event) {
+								this.selected = !this.selected;
+							}
+						}
+					}
+				}
+				break;
+		}
 
 		return rtnVal;
 	}

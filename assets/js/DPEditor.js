@@ -404,6 +404,14 @@ class DPEditor {
 				'object': 'DPAddPerformer'
 			},
 			{
+				'folder': 'drawreference',
+				'featureId': uuidv4(),
+				'icon': 'pencil',
+				'title': 'Draw References',
+				'buttonSetting': 'active',
+				'object': 'DPDrawReference'
+			},
+			{
 				'folder': 'pointer',
 				'featureId': uuidv4(),
 				'icon': 'mouse-pointer',
@@ -414,7 +422,7 @@ class DPEditor {
 			{
 				'folder': 'select',
 				'featureId': uuidv4(),
-				'icon': 'pencil',
+				'icon': 'object-group',
 				'title': 'Select',
 				'buttonSetting': 'active',
 				'object': 'DPSelect'

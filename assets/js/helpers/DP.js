@@ -610,6 +610,12 @@ class DP {
 					} else {
 						to = event.point;
 					}
+					// path is undefined if there was no drag (simple click)
+					if (path != undefined) {
+						// let's set the From to be the topLeft * the To to bottomRight
+						from = path.bounds.topLeft;
+						to = path.bounds.bottomRight;
+					}
 					if (path != undefined) {
 						path.remove();
 					}
@@ -626,7 +632,6 @@ class DP {
 					permanent.onClick = function(event) {
 						this.selected = !this.selected;
 					}
-
 					// handle if there are obj.numPoints
 					if (obj.spacingLR !== undefined && obj.spacingLR > 0 && obj.spacingFB !== undefined && obj.spacingFB > 0) {
 						// divid the length of the vertical line by the spacingFB * pps. Then add 1 for the initial row.

@@ -33,7 +33,7 @@
 .editor-chart-settings, .editor-chart-controls, .editor-chart-count-controls {
 	display: inline;
 }
-.editor-chart-settings a.btn.btn-default, .editor-chart-controls a.btn.btn-default, .editor-chart-count-controls a.btn.btn-default  {
+.editor-chart-settings a.btn.btn-default, .editor-chart-controls .btn-group, .editor-chart-count-controls .btn-group {
 	margin-right: .5em;
 }
 .editor-chart-count-controls {

@@ -179,6 +179,11 @@ class DPEditor {
 			'class': dpEditor.ui.class + '-chart-count-controls'
 		}).appendTo(dpEditor.ui.chartHeader.parent);
 
+
+		var btnToolbar, btnGroup;
+		btnGroup = $('<div>', {
+			'class': 'btn-group'
+		}).appendTo(dpEditor.ui.chartHeader.controls);
 		// previous chart
 		$('<a>', {
 			'class': 'btn btn-default',
@@ -194,7 +199,7 @@ class DPEditor {
 			} else {
 				console.log('DEBUG: Currently on the first chart. There is no previous chart to move to.');
 			}
-		}).appendTo(dpEditor.ui.chartHeader.controls);
+		}).appendTo(btnGroup);
 		// next chart
 		$('<a>', {
 			'class': 'btn btn-default',
@@ -210,7 +215,7 @@ class DPEditor {
 			} else {
 				console.log('DEBUG: Currently on the last chart. There is no next chart to move to.');
 			}
-		}).appendTo(dpEditor.ui.chartHeader.controls);
+		}).appendTo(btnGroup);
 
 		dpEditor.ui.chartHeader.controls.append(document.createTextNode('Chart: '));
 		// Chart Number
@@ -218,6 +223,9 @@ class DPEditor {
 			'id': 'chartNumber' 
 		}).appendTo(dpEditor.ui.chartHeader.controls);
 
+		btnGroup = $('<div>', {
+			'class': 'btn-group'
+		}).appendTo(dpEditor.ui.chartHeader.countControls);
 		// Previous Count
 		$('<a>', {
 			'class': 'btn btn-default',
@@ -233,7 +241,7 @@ class DPEditor {
 			} else {
 				console.log('DEBUG: Currently on the initial count (0). There is no previous count to move to.');
 			}
-		}).appendTo(dpEditor.ui.chartHeader.countControls);
+		}).appendTo(btnGroup);
 		// Next Count
 		$('<a>', {
 			'class': 'btn btn-default',
@@ -249,7 +257,7 @@ class DPEditor {
 			} else {
 				console.log('DEBUG: Currently on the last count. There is no next count to move to.');
 			}
-		}).appendTo(dpEditor.ui.chartHeader.countControls);
+		}).appendTo(btnGroup);
 
 		dpEditor.ui.chartHeader.countControls.append(document.createTextNode('Count: '));
 		// Count Number
@@ -306,9 +314,6 @@ class DPEditor {
 		// make the toolbar widget move with your scroll
 		$(window).scroll( this.setToolbarOnScroll(dpEditor.ui) );
 		
-		var btnToolbar,
-			btnGroup;
-
 		btnToolbar = $('<div>', {
 			'class': 'btn-toolbar'
 		}).appendTo(dpEditor.ui.toolbar.parent);

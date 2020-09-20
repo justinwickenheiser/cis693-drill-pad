@@ -481,17 +481,7 @@ class DP {
 					} else {
 						center = event.point;
 					}
-					path = new paper.Path.Circle({
-						center: center,
-						radius: 3,
-						strokeColor: 'purple',
-						parent: layer,
-						data: {className:'refPoint'},
-						name: uuidv4()
-					});
-					path.onClick = function(event) {
-						this.selected = !this.selected;
-					}
+					DP.createRefPoint(center, layer);
 				}
 
 				rtnVal.onMouseDrag = null;
@@ -559,17 +549,7 @@ class DP {
 						var offset = permanent.length / obj.numPoints;
 						for (var i = 0; i < obj.numPoints; i++) {
 							var point = permanent.getPointAt(offset * i);
-							var pt = new paper.Path.Circle({
-								center: point,
-								radius: 3,
-								strokeColor: 'purple',
-								parent: layer,
-								data: {className:'refPoint'},
-								name: uuidv4()
-							});
-							pt.onClick = function(event) {
-								this.selected = !this.selected;
-							}
+							DP.createRefPoint(point, layer);
 						}
 					}
 				};
@@ -641,18 +621,8 @@ class DP {
 
 						for (var r = 0; r < rows; r++) {
 							for (var c = 0; c < cols; c++) {
-								var position = new paper.Point([from.add([obj.spacingLR*c*obj.pps,obj.spacingFB*r*obj.pps]).x, from.add([obj.spacingLR*c*obj.pps,obj.spacingFB*r*obj.pps]).y]);
-								var pt = new paper.Path.Circle({
-									center: position,
-									radius: 3,
-									strokeColor: 'purple',
-									parent: layer,
-									data: {className:'refPoint'},
-									name: uuidv4()
-								});
-								pt.onClick = function(event) {
-									this.selected = !this.selected;
-								}
+								var point = new paper.Point([from.add([obj.spacingLR*c*obj.pps,obj.spacingFB*r*obj.pps]).x, from.add([obj.spacingLR*c*obj.pps,obj.spacingFB*r*obj.pps]).y]);
+								DP.createRefPoint(point, layer);
 							}
 						}
 					}
@@ -720,7 +690,8 @@ class DP {
 						strokeColor: 'blue',
 						dashArray: [10, 5],
 						data: {className:'refArc'},
-						parent: layer
+						parent: layer,
+						name: uuidv4()
 					});
 					permanent.onClick = function(event) {
 						this.selected = !this.selected;
@@ -736,17 +707,7 @@ class DP {
 						
 						for (var i = 0; i < obj.numPoints; i++) {
 							var point = permanent.getPointAt(offset * i);
-							var pt = new paper.Path.Circle({
-								center: point,
-								radius: 3,
-								strokeColor: 'purple',
-								parent: layer,
-								data: {className:'refPoint'},
-								name: uuidv4()
-							});
-							pt.onClick = function(event) {
-								this.selected = !this.selected;
-							}
+							DP.createRefPoint(point, layer);
 						}
 					}
 				}
@@ -754,5 +715,19 @@ class DP {
 		}
 
 		return rtnVal;
+	}
+
+	static createRefPoint(position, parent) {
+		var pt = new paper.Path.Circle({
+			center: position,
+			radius: 3,
+			strokeColor: 'purple',
+			parent: parent,
+			data: {className:'refPoint'},
+			name: uuidv4()
+		});
+		pt.onClick = function(event) {
+			this.selected = !this.selected;
+		}
 	}
 }

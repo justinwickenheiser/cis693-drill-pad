@@ -412,6 +412,14 @@ class DPEditor {
 				'object': 'DPDrawReference'
 			},
 			{
+				'folder': 'referencemanager',
+				'featureId': uuidv4(),
+				'icon': 'eye',
+				'title': 'Manage References',
+				'buttonSetting': 'active',
+				'object': 'DPReferenceManager'
+			},
+			{
 				'folder': 'pointer',
 				'featureId': uuidv4(),
 				'icon': 'mouse-pointer',

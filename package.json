@@ -1,7 +1,7 @@
 {
   "name": "drill-pad",
   "private": true,
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A Marching Band Drill writing web app",
   "keywords": [],
   "dependencies": {

@@ -51,6 +51,9 @@ class DPEditor {
 		if (obj.settings.pps !== undefined) {
 			dpEditor.settings.pps = obj.settings.pps;
 		}
+		if (obj.settings.hash !== undefined) {
+			dpEditor.settings.hash = obj.settings.hash;
+		}
 		if (obj.editorId !== undefined) {
 			this.setEditorId(obj.editorId);
 		}
@@ -58,7 +61,8 @@ class DPEditor {
 			this.setTitle(obj.title);
 		}
 		if (obj.dpChart !== undefined) {
-			this.setDPCharts(obj.dpChart);
+			console.log(obj.dpChart)
+			this.setDPCharts(obj.dpChart, true);
 		}
 
 		// ui.id
@@ -471,7 +475,16 @@ class DPEditor {
 				'title': 'Chart Settings',
 				'buttonSetting': 'default',
 				'object': 'DPChartSettings'
-			}
+			},
+			{
+				'folder': 'save',
+				'featureId': uuidv4(),
+				'icon': 'save',
+				'title': 'Save',
+				'buttonSetting': 'default',
+				'object': 'DPSave'
+			},
+
 		];
 
 		for (var i = 0; i < tempFeatures.length; i++) {
@@ -496,14 +509,6 @@ class DPEditor {
 			'name': 'performer'
 		});
 		performerLayer.activate(); // make activeLayer in project
-
-		// Now add the 1st chart, because we always want at least 1 chart
-		dpEditor.setDPChart(new DPChart({
-			'chartId': uuidv4(),
-			'chartNumber': dpEditor.dpChart.length + 1,
-			'counts': 0,
-			'activeCountIdx': 0
-		}, dpEditor));
 
 	} // END OF CONSTRUCTOR()
 
@@ -650,6 +655,14 @@ class DPEditor {
 	}
 	getDPChart(idx) {
 		return this.dpChart[idx];
+	}
+	getChartsJSON() {
+		var rtnVal = [];
+		var charts = this.getDPCharts();
+		for (var i = 0; i < charts.length; i++) {
+			rtnVal.push( charts[i].getJSON() );
+		}
+		return rtnVal;
 	}
 
 	// ACTIVECHARTIDX
@@ -802,6 +815,16 @@ class DPEditor {
 	resetView() {
 		this.view.zoom = 1;
 		this.view.center = [this.view.size.width/2, this.view.size.height/2];
+	}
+
+	// JSON
+	getJSON() {
+		return {
+			editorId: this.getEditorId(),
+			title: this.getTitle(),
+			settings: this.settings,
+			charts: this.getChartsJSON(),
+		}
 	}
 
 	redraw() {

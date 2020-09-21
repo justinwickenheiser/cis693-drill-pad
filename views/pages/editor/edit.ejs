@@ -1,0 +1,137 @@
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<style type="text/css">
+	.dp-info {
+		margin: 1em 4em;
+	}
+</style>
+<div id="edit" v-cloak>
+
+	<div id="dp-editor-container">
+		<!-- Loading... -->
+	</div>
+	<div id="dp-content-loading">
+		<p>
+			<strong>Loading editor...</strong>
+		</p>
+		<p class="muted">
+			If you continue to see this message for more than 30 seconds, you may have JavaScript disabled or the editor may have failed to load.
+		</p>
+	</div>
+	<!-- Directions / Info -->
+	<div class="dp-info">
+		<div class="row">
+			<div class="col-md-4">
+				<h2>Adding a Chart</h2>
+				<p>
+					Click the <code>[+]</code> button at the top of the toolbar. This will do the following:
+					<ol>
+						<li>Create a new DPChart</li>
+						<li>Add the chart to the end of the editor's array of charts</li>
+						<li>Set the new chart as the active chart</li>
+					</ol>
+				</p>
+			</div>
+			<div class="col-md-4">
+				<h2>Pan / Zoom</h2>
+				<p>
+					<code>shift + [scroll]</code> will Pan<br />
+					<code>alt + [scroll]</code> will Zoom
+				</p>
+			</div>
+			<div class="col-md-4">
+				<h2>Snap To Grid</h2>
+				<p>
+					Holding <code>shift</code> will activate "Snap-to-Grid" for the following situations:
+					<ul>
+						<li>Adding Performers</li>
+						<li>Drag / Drop Performers</li>
+						<li>Drawing Reference Objects</li>
+					</ul>
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<h2>Reference Objects</h2>
+				<p>
+					Click the <code>[<span class="fa fa-pencil"></span>]</code> button in the toolbar. This will add control fields under the Editor. There are 4 types of references:
+					<ul>
+						<li>Point</li>
+						<li>Circle</li>
+						<li>Rectangle</li>
+						<li>Arc</li>
+					</ul>
+				</p>
+				<strong>Point</strong>
+				<p>A simple reference point that is created on mouse-down.</p>
+				<strong>Circle</strong>
+				<p>
+					The first click marks the center of the reference circle, then drag to the desired radius. This type of reference object can add individual reference points on the circle based on the number provided in the "Number of Points to Add" field.
+				</p>
+				<strong>Rectangle</strong>
+				<p>
+					The rectangle makes use of the "Spacing Front-to-Back" and "Spacing Left-to-Right" fields to populate reference points in a grid.
+				</p>
+				<strong>Arc</strong>
+				<p>
+					The arc can specify an existing reference point that will be used to connect the beginning and end of the reference arc.
+				</p>
+			</div>
+			<div class="col-md-4">
+				
+			</div>
+			<div class="col-md-4">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var editor;
+	$(document).ready(function () {
+		var isNew = <%= JSON.stringify(isNew) %>;
+		if (isNew) {
+			editor = new DPEditor('dp-editor-container', {
+				editorId: uuidv4()
+			});
+
+			// Now add the 1st chart, because we always want at least 1 chart
+			editor.setDPChart(new DPChart({
+				'chartId': uuidv4(),
+				'chartNumber': 1,
+				'counts': 0,
+				'activeCountIdx': 0
+			}, dpEditor));
+		} else {
+			editor = new DPEditor('dp-editor-container', {
+				editorId: <%- JSON.stringify(editor.publicId) %>,
+				title: <%- JSON.stringify(editor.title) %>,
+				settings: {
+					hash: <%- JSON.stringify(editor.hashLine) %>,
+				},
+			});
+
+			// Build the chart objects
+			var charts = JSON.parse('<%- JSON.stringify(editor.charts) %>');
+			var chartObjects = [];
+			for (var i = 0; i < charts.length; i++) {
+				chartObjects.push(new DPChart({
+					'chartId': charts[i].chartId,
+					'chartNumber': parseInt(charts[i].chartNumber),
+					'title': charts[i].title,
+					'counts': parseInt(charts[i].counts),
+					'activeCountIdx': 0
+				}, editor));
+			}
+			// Now set the charts for the editor
+			editor.setDPCharts(chartObjects);
+			editor.setActiveChartIdx(0);
+		}
+
+		editor.redraw();
+		console.log(editor);
+		$('#dp-content-loading').toggle();
+	});
+</script>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

@@ -113,4 +113,15 @@ class DPChart {
 		return this.activeCountIdx;
 	}
 
+	// JSON
+	getJSON() {
+		return {
+			chartId: this.getChartId(),
+			title: this.getTitle(),
+			chartNumber: this.getChartNumber(),
+			counts: this.getCounts(),
+			activeCountIdx: this.getActiveCountIdx()
+		}
+	}
+
 }

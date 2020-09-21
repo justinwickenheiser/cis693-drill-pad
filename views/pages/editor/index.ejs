@@ -1,0 +1,32 @@
+<div id="index" class="container" v-cloak>
+	<h1>Shows</h1>
+	<p>
+		<a href="edit" class="btn btn-success">New Show</a>
+	</p>
+	
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Title</th>
+				<th>PublicId</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<% for (var i = 0; i < user.editors.length; i++) { %>
+			<tr>
+				<td><%= user.editors[i].title %></td>
+				<td><%= user.editors[i].publicId %></td>
+				<td>
+					<a href="edit/<%= user.editors[i].publicId %>" class="btn btn-primary">
+						<span class="fa fa-pencil"></span>
+						Edit
+					</a>
+				</td>
+			</tr>
+			<% } %>
+		</tbody>
+	</table>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

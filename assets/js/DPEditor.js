@@ -745,6 +745,14 @@ class DPEditor {
 	getDPPerformer(idx) {
 		return this.dpPerformer[idx];
 	}
+	getPerformersJSON() {
+		var rtnVal = [];
+		var performers = this.getDPPerformers();
+		for (var i = 0; i < performers.length; i++) {
+			rtnVal.push( performers[i].getJSON() );
+		}
+		return rtnVal;
+	}
 
 	// SELECTEDPERFORMERS
 	setSelectedPerformer(dpPerformer) {
@@ -824,6 +832,7 @@ class DPEditor {
 			title: this.getTitle(),
 			settings: this.settings,
 			charts: this.getChartsJSON(),
+			performers: this.getPerformersJSON(),
 		}
 	}
 

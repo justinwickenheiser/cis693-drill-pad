@@ -13,7 +13,6 @@ class DPSave extends DPFeature {
 				_csrf: res._csrf,
 				editor: dpEditor.getJSON()
 			}, function andThen(res) {
-				console.log(res)
 			});
 		});
 		

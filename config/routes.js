@@ -13,8 +13,8 @@ module.exports.routes = {
   //  ╦ ╦╔═╗╔╗ ╔═╗╔═╗╔═╗╔═╗╔═╗
   //  ║║║║╣ ╠╩╗╠═╝╠═╣║ ╦║╣ ╚═╗
   //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝
-  // 'GET /':                   { action: 'view-homepage-or-redirect' },
-  'GET /':                   { action: 'view-homepage' },
+  'GET /':                   { action: 'view-homepage-or-redirect' },
+  // 'GET /':                   { action: 'view-homepage' },
   'GET /welcome/:unused?':   { action: 'dashboard/view-welcome' },
 
   'GET /legal/terms':        { action:   'legal/view-terms' },
@@ -33,7 +33,7 @@ module.exports.routes = {
   'GET /account/password':   { action: 'account/view-edit-password' },
   'GET /account/profile':    { action: 'account/view-edit-profile' },
 
-  'GET /editor':             { action: 'editor/view-index' },
+  'GET /editor/':             { action: 'editor/view-index' },
   'GET /editor/index':       { action: 'editor/view-index' },
   'GET /editor/edit':        { action: 'editor/view-edit' },
   'GET /editor/edit/:editorId': { action: 'editor/view-edit' },

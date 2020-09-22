@@ -95,62 +95,11 @@ class DPAddPerformer extends DPFeature {
 						fillColor: 'black',
 						fontFamily: 'Arial',
 						parent: group
-					});
+					}, dpEditor);
 					// this needs to be reset because adding the Content shifts the size of the bounding box
 					newPerf.position = position;
 					// we manually updated position, so update the DrillNum position too
 					newPerf.updateDrillNumberPosition();
-
-					// Give the performer the ability to be dragged.
-					newPerf.onMouseDrag = function(event) {
-						var chartIdx = dpEditor.getActiveChartIdx();
-						var chart = dpEditor.getDPChart(chartIdx);
-						var countIdx = chart.getActiveCountIdx();
-						var chartId = chart.getChartId();
-						
-						// is the performer in the selectedPerformer set? AND are there more performers that are selected?
-						var isSelected = this.selected; // .selected is a paperJs property
-						if (isSelected && Object.keys(dpEditor.getSelectedPerformers()).length > 1) {
-							dpEditor.applyToPerformers(DP.LOGIC.DRAG_PERFORMERS.CODE, {
-								delta: event.delta,
-								chartId: chartId,
-								countIdx: countIdx
-							}, true);
-							// =========================================
-							// In this case, we will not snap-to-grid
-							// if there are multiple selected performers
-							// this is because rounding/applying a delta
-							// is confusing.
-							// =========================================
-						} else {
-							// update the position visually
-							if (event.event.shiftKey) {
-								// "snap to grid. i.e. round to something divisible by pps"
-								this.position = [Math.round(event.point.x/dpEditor.settings.pps)*dpEditor.settings.pps, Math.round(event.point.y/dpEditor.settings.pps)*dpEditor.settings.pps];
-							} else {
-								this.position = this.position.add(event.delta);
-							}
-							// update the drillNumber position
-							this.updateDrillNumberPosition();
-							// Update the position for the active chart & count
-							this.setPositionSet(this.position, chartId, countIdx);
-							// this.getPositionSet(chartId, countIdx).x = this.position.x;
-							// this.getPositionSet(chartId, countIdx).y = this.position.y;
-						}
-					}
-
-					// When clicked they will be selected/deselected
-					// this is a Command + click or Windows + Click
-					newPerf.onClick = function(event) {
-						if ( event.event.metaKey ) {
-							if (this.selected) {
-								dpEditor.removeSelectedPerformer(this.performerId);
-							} else {
-								dpEditor.setSelectedPerformer(this);
-							}
-							this.selected = !this.selected;
-						}
-					}
 
 					// Set the position in the performer's positionSet
 					var chartIdx = dpEditor.getActiveChartIdx();

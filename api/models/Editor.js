@@ -32,6 +32,10 @@ module.exports = {
         type: 'json'
     },
 
+    performers: {
+        type: 'json'
+    },
+
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝

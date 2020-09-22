@@ -25,7 +25,8 @@ module.exports = {
       settings: {
         hash: null
       },
-      charts:[]
+      charts:[],
+      performers:[],
     };
     // Look up the editor by id
     if (editorId !== undefined) {

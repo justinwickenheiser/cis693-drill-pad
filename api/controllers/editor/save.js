@@ -20,9 +20,7 @@ module.exports = {
   fn: async function (inputs) {
     var editor = this.req.param('editor');
     var userId = this.req.session.userId;
-    console.log(userId);
     var qryExists = await Editor.findOne({publicId: editor.editorId});
-    sails.log(qryExists);
 
     if (qryExists === undefined) {
       // doesn't exist. Insert new record
@@ -31,18 +29,19 @@ module.exports = {
         title: editor.title,
         hashLine: parseInt( editor.settings.hash ),
         userId: userId,
-        charts: editor.charts
+        charts: editor.charts,
+        performers: editor.performers
       }).fetch();
       sails.log(qryInsert);
     } else {
       var qryUpdate = await Editor.updateOne({publicId: editor.editorId}).set({
         title: editor.title,
         hashLine: parseInt( editor.settings.hash ),
-        charts: editor.charts
+        charts: editor.charts,
+        performers: editor.performers
       });
       sails.log(qryUpdate);
     }
-    
     
     // All done.
     return;

@@ -87,8 +87,9 @@
 </div>
 
 <script type="text/javascript">
+	var editor;
 	$(document).ready(function () {
-		var editor = new DPEditor('dp-editor-container');
+		editor = new DPEditor('dp-editor-container');
 		editor.redraw();
 		console.log(editor);
 		$('#dp-content-loading').toggle();

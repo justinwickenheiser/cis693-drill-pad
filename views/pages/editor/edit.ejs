@@ -127,6 +127,29 @@
 			// Now set the charts for the editor
 			editor.setDPCharts(chartObjects);
 			editor.setActiveChartIdx(0);
+
+			// Build the performer objects
+			var performers = JSON.parse('<%- JSON.stringify(editor.performers) %>');
+			var performerObjects = [];
+			for (var i = 0; i < performers.length; i++) {
+				// Check if there is a group for the symbol, if not create one.
+				var group = project.getItem({className: 'Group', name: performers[i].symbol});
+				if (!group) {
+					group = new paper.Group({name: performers[i].symbol, parent: project.getItem({className: 'Layer', name: 'performer'})});
+				}
+
+				performerObjects.push(new DPPerformer({
+					'performerId': performers[i].performerId,
+					'drillNumber': { number: parseInt(performers[i].drillNumber.number) },
+					'positionSet': performers[i].positionSet,
+					content: performers[i].symbol,
+					fillColor: 'black',
+					fontFamily: 'Arial',
+					parent: group
+				}, editor));
+			}
+			// Set the performers in the editor
+			editor.setDPPerformers(performerObjects);
 		}
 
 		editor.redraw();

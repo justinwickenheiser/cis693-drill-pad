@@ -12,9 +12,10 @@ class DPPerformer extends paper.PointText {
 	positionSet = {
 		// chartId: [ <Point> ] --> each <Point> matches w/ the Count in the chartId. Therefore
 		//		the length of the array = # counts in chart + 1 (+1 for the initial position index [0])
-	}
+	};
+	dpEditor = null;
 
-	constructor(obj) {
+	constructor(obj, dpEditor) {
 		super(obj);
 		var dpPerformer = this;
 
@@ -30,8 +31,72 @@ class DPPerformer extends paper.PointText {
 		if (obj.drillNumber.number !== undefined) {
 			dpPerformer.setDrillNumber(obj.drillNumber.number);
 		}
+		if (obj.positionSet !== undefined) {
+			dpPerformer.setPositionSets(obj.positionSet);
+		}
+		if (dpEditor !== undefined) {
+			this.setDPEditor(dpEditor);
+		}
 
 		dpPerformer.buildDrillNumberElement();
+
+		// Give the performer the ability to be dragged.
+		dpPerformer.onMouseDrag = function(event) {
+			var chartIdx = dpEditor.getActiveChartIdx();
+			var chart = dpEditor.getDPChart(chartIdx);
+			var countIdx = chart.getActiveCountIdx();
+			var chartId = chart.getChartId();
+			
+			// is the performer in the selectedPerformer set? AND are there more performers that are selected?
+			var isSelected = this.selected; // .selected is a paperJs property
+			if (isSelected && Object.keys(dpEditor.getSelectedPerformers()).length > 1) {
+				dpEditor.applyToPerformers(DP.LOGIC.DRAG_PERFORMERS.CODE, {
+					delta: event.delta,
+					chartId: chartId,
+					countIdx: countIdx
+				}, true);
+				// =========================================
+				// In this case, we will not snap-to-grid
+				// if there are multiple selected performers
+				// this is because rounding/applying a delta
+				// is confusing.
+				// =========================================
+			} else {
+				// update the position visually
+				if (event.event.shiftKey) {
+					// "snap to grid. i.e. round to something divisible by pps"
+					this.position = [Math.round(event.point.x/dpEditor.settings.pps)*dpEditor.settings.pps, Math.round(event.point.y/dpEditor.settings.pps)*dpEditor.settings.pps];
+				} else {
+					this.position = this.position.add(event.delta);
+				}
+				// update the drillNumber position
+				this.updateDrillNumberPosition();
+				// Update the position for the active chart & count
+				this.setPositionSet(this.position, chartId, countIdx);
+			}
+		}
+
+		// When clicked they will be selected/deselected
+		// this is a Command + click or Windows + Click
+		dpPerformer.onClick = function(event) {
+			if ( event.event.metaKey ) {
+				if (this.selected) {
+					dpEditor.removeSelectedPerformer(this.performerId);
+				} else {
+					dpEditor.setSelectedPerformer(this);
+				}
+				this.selected = !this.selected;
+			}
+		}
+	}
+
+	// DPEDITOR
+	setDPEditor(val) {
+		if (val !== null && typeof(val) === 'object' && val.constructor === DPEditor) {
+			this.dpEditor = val;
+			return true;
+		}
+		return false;
 	}
 
 	// PERFORMERID
@@ -114,8 +179,18 @@ class DPPerformer extends paper.PointText {
 
 	// POSITIONSET
 	setPositionSets(obj) {
+		var dpPerformer = this;
 		if (typeof(obj) === 'object') {
-			this.positionSet = JSON.parse(JSON.stringify(obj));
+			var temp = JSON.parse(JSON.stringify(obj));
+			Object.keys(temp).forEach(function (chartId) {
+				var positionArray = temp[chartId];
+				for (var i=0; i<positionArray.length; i++) {
+					dpPerformer.setPositionSet(new paper.Point({
+						x: positionArray[i].x,
+						y: positionArray[i].y
+					}), chartId, i);
+				}
+			});
 			return true;
 		}
 		return false;
@@ -365,5 +440,35 @@ class DPPerformer extends paper.PointText {
 		// finish remaining counts using the final moveSet
 		patternSet.moveSet.counts = remainingCounts;
 		this.applyMoveSet(patternSet.moveSet, chartId, newCountIdx);
+	}
+
+
+	// JSON
+	getJSON() {
+		return {
+			performerId: this.getPerformerId(),
+			drillNumber: this.drillNumber,
+			positionSet: this.positionSetJSON(),
+			symbol: this.content, // paperJS attribute
+		}
+	}
+
+	positionSetJSON() {
+		var dpPerformer = this;
+		var rtnVal = {}
+		Object.keys(this.positionSet).forEach(function (chartId) {
+			var jsonArray = [];
+			var positionArray = dpPerformer.positionSet[chartId];
+
+			for (var i=0; i<positionArray.length; i++) {
+				jsonArray.push({
+					x: positionArray[i].x,
+					y: positionArray[i].y
+				})
+			}
+
+			rtnVal[chartId] = jsonArray;
+		});
+		return rtnVal;
 	}
 }

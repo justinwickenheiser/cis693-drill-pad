@@ -48,7 +48,8 @@ module.exports = {
     ***************************************************************************/
     default: {
       // adapter: 'sails-mysql',
-      url: sails_datastores__default__url,
+      url: process.env.DATABSE_URL,
+      // url: sails_datastores__default__url,
       //--------------------------------------------------------------------------
       //  /\   To avoid checking it in to version control, you might opt to set
       //  ||   sensitive credentials like `url` using an environment variable.

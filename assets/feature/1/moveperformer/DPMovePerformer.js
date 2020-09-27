@@ -388,7 +388,7 @@ class DPMovePerformer extends DPFeature {
 		var col2 = $('<div>', {'class': 'col-md-3'}).appendTo(row);
 		var col3 = $('<div>', {'class': 'col-md-3'}).appendTo(row);
 		var col4 = $('<div>', {'class': 'col-md-3'}).appendTo(row);
-		var p = $('<p>');
+		var p = $('<p>').appendTo(col1);
 
 		// Reference Point
 		$('<label>', {
@@ -441,75 +441,7 @@ class DPMovePerformer extends DPFeature {
 				'text': basicFieldReferences[hashln].text
 			}));
 		}
-
-		// .append($('<option>', {
-		// 	'value': DP.MOVE.FM,
-		// 	'text': 'Forward March (FM)'
-		// })).append($('<option>', {
-		// 	'value': DP.MOVE.BM,
-		// 	'text': 'Backward March (BM)'
-		// })).append($('<option>', {
-		// 	'value': DP.MOVE.LT,
-		// 	'text': 'Left Traverse (LT)'
-		// })).append($('<option>', {
-		// 	'value': DP.MOVE.RT,
-		// 	'text': 'Right Traverse (RT)'
-		// })).append($('<option>', {
-		// 	'value': DP.OBLIQUE.FL,
-		// 	'text': 'Oblique Left'
-		// })).append($('<option>', {
-		// 	'value': DP.OBLIQUE.FR,
-		// 	'text': 'Oblique Right'
-		// })).append($('<option>', {
-		// 	'value': DP.OBLIQUE.BL,
-		// 	'text': 'Backward Oblique Left'
-		// })).append($('<option>', {
-		// 	'value': DP.OBLIQUE.BR,
-		// 	'text': 'Backward Oblique Right'
-		// })).appendTo(p);
-		p.appendTo(col1);
-		p = $('<p>');
-
-		// Step Size (8-5, 16-5)
-		// $('<label>', {
-		// 	'for': 'stepSize'+count,
-		// 	'text': 'Step Size'
-		// }).append($('<span>',{
-		// 	'class': 'required',
-		// 	'text': '*'
-		// })).appendTo(p);
-		// $('<select>', {
-		// 	'id': 'stepSize'+count,
-		// 	'class': 'stepSize',
-		// 	'required': 'true',
-		// 	'message': 'Please select the step size.'
-		// }).append($('<option>', {
-		// 	'value': DP.STEP.STND,
-		// 	'text': '8 to 5'
-		// })).append($('<option>', {
-		// 	'value': DP.STEP.HALF,
-		// 	'text': '16 to 5'
-		// })).appendTo(p);
-		// p.appendTo(col2);
-		// p = $('<p>');
-
-		// Number of Counts
-		// $('<label>', {
-		// 	'for': 'counts'+count,
-		// 	'text': 'Number of Counts'
-		// }).append($('<span>',{
-		// 	'class': 'required',
-		// 	'text': '*'
-		// })).appendTo(p);
-		// $('<input>', {
-		// 	'id': 'counts'+count,
-		// 	'class': 'counts',
-		// 	'type': 'number',
-		// 	'required': 'true',
-		// 	'message': 'Please enter a number of counts.'
-		// }).appendTo(p);
-		// p.appendTo(col3);
-		// delete button
+	
 		p = $('<p>');
 		p.append($('<br>'));
 		var button = $('<button>',{

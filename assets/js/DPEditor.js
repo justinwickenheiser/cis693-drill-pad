@@ -453,6 +453,14 @@ class DPEditor {
 				'object': 'DPMovePerformer'
 			},
 			{
+				'folder': 'rotateperformer',
+				'featureId': uuidv4(),
+				'icon': 'rotate-right',
+				'title': 'Rotate Performer',
+				'buttonSetting': 'active',
+				'object': 'DPRotatePerformer'
+			},
+			{
 				'folder': 'resetpz',
 				'featureId': uuidv4(),
 				'icon': 'search',

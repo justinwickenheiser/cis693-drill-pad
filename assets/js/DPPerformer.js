@@ -327,10 +327,14 @@ class DPPerformer extends paper.PointText {
 		 *		counts: <number>,
 		 *		stepSize: <number>, [optional]
 		 *		pps: <number>, [optional]
+		 *		rotation: {
+		 *			pointOfRotation: <Point>,
+		 *			degreesPerCount: 0,
+		 *		}, [optional]
 		 * }
 		 */
 		for (var count = 1; count <= moveSet.counts; count++) {
-			var p = DP.getNextPosition(point, moveSet.move, count, moveSet.stepSize, moveSet.pps);
+			var p = DP.getNextPosition(point, moveSet.move, count, moveSet.stepSize, moveSet.pps, moveSet.rotation);
 			this.setPositionSet(p , chartId, countIdx+count);
 		}
 	}
@@ -340,6 +344,10 @@ class DPPerformer extends paper.PointText {
 		 *		counts: <number>,
 		 *		stepSize: <number>, [optional]
 		 *		pps: <number>, [optional]
+		 *		rotation: {
+		 *			pointOfRotation: <Point>,
+		 *			degreesPerCount: 0,
+		 *		}, [optional]
 		 * }]
 		 */
 		var newCountIdx = countIdx;

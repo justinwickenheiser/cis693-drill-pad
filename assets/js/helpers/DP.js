@@ -13,6 +13,10 @@ class DP {
 		BL: 13,
 		BR: 14
 	}
+	static ROTATE = {
+		CW: 25,
+		CCW: 26
+	}
 	static STEP = {
 		STND: 5,
 		HALF: 6,
@@ -306,7 +310,7 @@ class DP {
 	}
 
 	// Takes a Paper <Point> object
-	static getNextPosition(point, direction, offset, stepSize, pps) {
+	static getNextPosition(point, direction, offset, stepSize, pps, rotation) {
 		if (direction == undefined) {
 			direction = DP.MOVE.MT;
 		}
@@ -318,6 +322,12 @@ class DP {
 		}
 		if (pps == undefined) {
 			pps = 5;
+		}
+		if (rotation == undefined) {
+			rotation = {
+				pointOfRotation: null,
+				degreesPerCount: 0,
+			};
 		}
 
 		var rtnVal;
@@ -363,6 +373,24 @@ class DP {
 		} else if (direction === DP.OBLIQUE.BR) {
 			// BR = Towards North West corner (-x, -y)
 			rtnVal = [point.x - (offset * pps), point.y - (offset * pps)];
+		} else if (direction === DP.ROTATE.CW) {
+			// ROTATE CLOCKWISE
+			var tempPath = new paper.Path.Circle({
+				center: [point.x, point.y],
+				radius: 2
+			});
+			tempPath.rotate((rotation.degreesPerCount*offset), rotation.pointOfRotation);
+			rtnVal = [tempPath.position.x, tempPath.position.y];
+			tempPath.remove();
+		} else if (direction === DP.ROTATE.CCW) {
+			// ROTATE COUNT-CLOCKWISE
+			var tempPath = new paper.Path.Circle({
+				center: [point.x, point.y],
+				radius: 2
+			});
+			tempPath.rotate((-1*rotation.degreesPerCount*offset), rotation.pointOfRotation);
+			rtnVal = [tempPath.position.x, tempPath.position.y];
+			tempPath.remove();
 		}
 
 		// rtnVal has created as an [x, y] value. But return a Paper <Point>

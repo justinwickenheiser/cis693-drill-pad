@@ -50,6 +50,14 @@ class DP {
 		APPLY_PATTERNSET: {
 			CODE: 20,
 			PARAMS: ['patternSet','chartId','countIdx']
+		},
+		UPDATE_INIT_POSITIONS: {
+			CODE: 25,
+			PARAMS: []
+		},
+		UPDATE_EDGE_POSITIONS: {
+			CODE: 26,
+			PARAMS: ['chartId']
 		}
 	};
 	static FIELD_REFERENCE_ORDER = {

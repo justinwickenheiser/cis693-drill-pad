@@ -707,6 +707,7 @@ class DPEditor {
 			chartId: newChartId,
 			counts: 0
 		});
+		dpEditor.applyToPerformers(DP.LOGIC.UPDATE_INIT_POSITIONS.CODE);
 		
 		// call the chart settings feature
 		$(dpEditor.ui.chartHeader.settings[0].children[1]).click();
@@ -814,12 +815,21 @@ class DPEditor {
 					perf.updateDrillNumberPosition();
 					// also update the position for the active chart & count
 					perf.setPositionSet(perf.position, obj.chartId, obj.countIdx);
+					perf.updateEdgePositionSets(obj.chartId);
 					break;
 				case DP.LOGIC.APPLY_MOVESETARRAY.CODE:
 					perf.applyMoveSetArray(obj.moveSetArray, obj.chartId, obj.countIdx);
+					perf.updateEdgePositionSets(obj.chartId);
 					break;
 				case DP.LOGIC.APPLY_PATTERNSET.CODE:
 					perf.applyPatternSet(obj.patternSet, obj.chartId, obj.countIdx);
+					perf.updateEdgePositionSets(obj.chartId);
+					break;
+				case DP.LOGIC.UPDATE_INIT_POSITIONS.CODE:
+					perf.updateInitialPositionSet();
+					break;
+				case DP.LOGIC.UPDATE_EDGE_POSITIONS.CODE:
+					perf.updateEdgePositionSets(obj.chartId);
 					break;
 				default:
 					throw "DPEditor.applyToPerformers: Invalid Method."

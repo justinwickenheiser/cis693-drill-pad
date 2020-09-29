@@ -73,6 +73,8 @@ class DPPerformer extends paper.PointText {
 				this.updateDrillNumberPosition();
 				// Update the position for the active chart & count
 				this.setPositionSet(this.position, chartId, countIdx);
+				// run updateEdgePositionSets in case the initial or last count was adjusted
+				this.updateEdgePositionSets(chartId);
 			}
 		}
 
@@ -285,9 +287,24 @@ class DPPerformer extends paper.PointText {
 		if (this.positionSet[chartId] === undefined) {
 			// this is a new chart, 
 			this.positionSet[chartId] = []
-			// TO-DO:
-			// so we need to set the initial position to last position of the previous chart.
-			
+			// We need to set the initial position to last position of the previous chart.
+			var charts = this.dpEditor.getDPCharts();
+			// loop through every chart except the last one because that chart doesn't have a next chart
+			for (var i = 0; i < charts.length; i++) {
+				var chart = charts[i];
+				if (chart.getChartId() == chartId) {
+					// only update if we are not on idx 0
+					if (i != 0) {
+						var previousChart = charts[i-1];
+						var previousChartId = previousChart.getChartId();
+						var previousCounts = previousChart.getCounts();
+						var lastCountPosition = this.getPositionSet(previousChartId, previousCounts);
+						// set the last position of the previous chart to be the current initial position
+						this.setPositionSet(lastCountPosition, chartId, 0); 
+					}
+					break;
+				}
+			}
 		}
 		if (counts === undefined) {
 			counts = 0;
@@ -317,6 +334,67 @@ class DPPerformer extends paper.PointText {
 		}
 		return false;
 	}
+	updateInitialPositionSet() {
+		// ===========================================
+		// Loop through every chart in the editor and
+		// set initial count position to the same
+		// as the previous chart.
+		// ===========================================
+		var charts = this.dpEditor.getDPCharts();
+		// loop through every chart except the last one because that chart doesn't have a next chart
+		for (var i = 0; i < charts.length-1; i++) {
+			// get chartId and counts for the current chart in loop
+			var chart = charts[i];
+			var chartId = chart.getChartId();
+			var counts = chart.getCounts();
+			// get the last count's position
+			var lastCountPosition = this.getPositionSet(chartId, counts)
+			var nextChart = charts[i+1];
+			var nextChartId = nextChart.getChartId();
+			// set initial position for nextChart to be lastCountPosition
+			this.setPositionSet(lastCountPosition, nextChartId, 0); 
+		}
+		return true;
+	}
+	updateEdgePositionSets(chartId) {
+		// chartId is the chart that positions were edited on.
+		// update the previous chart and set the last position
+		// to the current chart's initial position.
+		// update the next chart and set the initial position
+		// to the current chart's last position
+
+		var charts = this.dpEditor.getDPCharts();
+		// loop through every chart except the last one because that chart doesn't have a next chart
+		for (var i = 0; i < charts.length; i++) {
+			// get chartId and counts for the current chart in loop
+			var chart = charts[i];
+			if (chart.getChartId() == chartId) {
+				// we found the index of the chart being edited
+				var counts = chart.getCounts();
+				// get the initial & last count's position
+				var initialCountPosition = this.getPositionSet(chartId, 0)
+				var lastCountPosition = this.getPositionSet(chartId, counts)
+
+				// only update the previous chart's position if we are not on idx 0
+				if (i != 0) {
+					var previousChart = charts[i-1];
+					var previousChartId = previousChart.getChartId();
+					var previousCounts = previousChart.getCounts();
+					// set the last position of the previous chart to be the current initial position
+					this.setPositionSet(initialCountPosition, previousChartId, previousCounts); 
+				}
+				// only update the next chart's position if we are not on the last idx (charts.length-1)
+				if (i != charts.length-1) {
+					var nextChart = charts[i+1];
+					var nextChartId = nextChart.getChartId();
+					// set initial position for nextChart to be lastCountPosition
+					this.setPositionSet(lastCountPosition, nextChartId, 0); 
+				}
+				break;
+			}
+		}
+	}
+
 
 	// Applying Moves
 	applyMoveSet(moveSet, chartId, countIdx) {

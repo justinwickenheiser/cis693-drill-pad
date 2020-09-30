@@ -188,8 +188,8 @@ class DPPerformer extends paper.PointText {
 				var positionArray = temp[chartId];
 				for (var i=0; i<positionArray.length; i++) {
 					dpPerformer.setPositionSet(new paper.Point({
-						x: positionArray[i].x,
-						y: positionArray[i].y
+						x: parseInt(positionArray[i].x),
+						y: parseInt(positionArray[i].y)
 					}), chartId, i);
 				}
 			});

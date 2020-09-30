@@ -72,7 +72,7 @@ the account verification message.)`,
 
     // Build up data for the new user record and save it to the database.
     // (Also use `fetch` to retrieve the new ID so that we can use it below.)
-    var newUserRecord = await DPUser.create(_.extend({
+    var newUserRecord = await User.create(_.extend({
       emailAddress: newEmailAddress,
       password: await sails.helpers.passwords.hashPassword(inputs.password),
       fullName: inputs.fullName,
@@ -92,7 +92,7 @@ the account verification message.)`,
       let stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
         emailAddress: newEmailAddress
       }).timeout(5000).retry();
-      await DPUser.updateOne({id: newUserRecord.id})
+      await User.updateOne({id: newUserRecord.id})
       .set({
         stripeCustomerId
       });

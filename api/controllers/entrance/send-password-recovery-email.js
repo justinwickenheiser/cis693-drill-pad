@@ -32,7 +32,7 @@ module.exports = {
 
     // Find the record for this user.
     // (Even if no such user exists, pretend it worked to discourage sniffing.)
-    var userRecord = await DPUser.findOne({ emailAddress: inputs.emailAddress });
+    var userRecord = await User.findOne({ emailAddress: inputs.emailAddress });
     if (!userRecord) {
       return;
     }//•
@@ -43,7 +43,7 @@ module.exports = {
 
     // Store the token on the user record
     // (This allows us to look up the user when the link from the email is clicked.)
-    await DPUser.updateOne({ id: userRecord.id })
+    await User.updateOne({ id: userRecord.id })
     .set({
       passwordResetToken: token,
       passwordResetTokenExpiresAt: Date.now() + sails.config.custom.passwordResetTokenTTL,

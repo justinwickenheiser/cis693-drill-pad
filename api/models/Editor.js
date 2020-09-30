@@ -46,7 +46,7 @@ module.exports = {
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
 
     userId: {
-        model: 'dpuser'
+        model: 'user'
     },
   },
 

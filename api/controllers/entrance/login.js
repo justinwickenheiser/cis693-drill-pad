@@ -74,7 +74,7 @@ and exposed as \`req.me\`.)`
     // Look up by the email address.
     // (note that we lowercase it to ensure the lookup is always case-insensitive,
     // regardless of which database we're using)
-    var userRecord = await DPUser.findOne({
+    var userRecord = await User.findOne({
       emailAddress: inputs.emailAddress.toLowerCase(),
     });
 

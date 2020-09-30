@@ -54,7 +54,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
     }
 
     // Get the user with the matching email token.
-    var user = await User.findOne({ emailProofToken: inputs.token });
+    var user = await DPUser.findOne({ emailProofToken: inputs.token });
 
     // If no such user exists, or their token is expired, bail.
     if (!user || user.emailProofTokenExpiresAt <= Date.now()) {
@@ -69,7 +69,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
       // then just update the state of their user record in the database,
       // store their user id in the session (just in case they aren't logged
       // in already), and then redirect them to the "email confirmed" page.
-      await User.updateOne({ id: user.id }).set({
+      await DPUser.updateOne({ id: user.id }).set({
         emailStatus: 'confirmed',
         emailProofToken: '',
         emailProofTokenExpiresAt: 0
@@ -95,7 +95,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
       // sure no one else managed to grab this email in the mean time since we
       // last checked its availability. (This is a relatively rare edge case--
       // see exit description.)
-      if (await User.count({ emailAddress: user.emailChangeCandidate }) > 0) {
+      if (await DPUser.count({ emailAddress: user.emailChangeCandidate }) > 0) {
         throw 'emailAddressNoLongerAvailable';
       }
 
@@ -113,7 +113,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
           emailAddress: user.emailChangeCandidate
         }).timeout(5000).retry();
         if (didNotAlreadyHaveCustomerId){
-          await User.updateOne({ id: user.id }).set({
+          await DPUser.updateOne({ id: user.id }).set({
             stripeCustomerId
           });
         }
@@ -122,7 +122,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
       // Finally update the user in the database, store their id in the session
       // (just in case they aren't logged in already), then redirect them to
       // their "my account" page so they can see their updated email address.
-      await User.updateOne({ id: user.id })
+      await DPUser.updateOne({ id: user.id })
       .set({
         emailStatus: 'confirmed',
         emailProofToken: '',

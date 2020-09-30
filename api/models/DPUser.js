@@ -1,5 +1,5 @@
 /**
- * User.js
+ * DPUser.js
  *
  * A user who can log in to this application.
  */

@@ -60,7 +60,7 @@ module.exports = {
 
     // If the email address is changing, make sure it is not already being used.
     if (_.contains(['begin-change', 'change-immediately', 'modify-pending-change'], desiredEmailEffect)) {
-      let conflictingUser = await User.findOne({
+      let conflictingUser = await DPUser.findOne({
         or: [
           { emailAddress: newEmailAddress },
           { emailChangeCandidate: newEmailAddress }
@@ -116,7 +116,7 @@ module.exports = {
     }
 
     // Save to the db
-    await User.updateOne({id: this.req.me.id })
+    await DPUser.updateOne({id: this.req.me.id })
     .set(valuesToSet);
 
     // If this is an immediate change, and billing features are enabled,
@@ -133,7 +133,7 @@ module.exports = {
         emailAddress: newEmailAddress
       }).timeout(5000).retry();
       if (didNotAlreadyHaveCustomerId){
-        await User.updateOne({ id: this.req.me.id })
+        await DPUser.updateOne({ id: this.req.me.id })
         .set({
           stripeCustomerId
         });

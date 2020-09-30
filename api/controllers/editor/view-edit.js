@@ -33,7 +33,7 @@ module.exports = {
       editor = await Editor.findOne({publicId: editorId});
       editor.isNew = false;
     }
-
+sails.log(process.env.DATABSE_URL);
     // Respond with view.
     return {editor: editor};
 

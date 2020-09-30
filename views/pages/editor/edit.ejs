@@ -90,8 +90,8 @@
 <script type="text/javascript">
 	var editor;
 	$(document).ready(function () {
-		var isNew = <%= JSON.stringify(isNew) %>;
-		if (isNew) {
+		var editorObj = JSON.parse('<%- JSON.stringify(editor) %>');
+		if (editorObj.isNew) {
 			editor = new DPEditor('dp-editor-container', {
 				editorId: uuidv4()
 			});
@@ -102,18 +102,18 @@
 				'chartNumber': 1,
 				'counts': 0,
 				'activeCountIdx': 0
-			}, dpEditor));
+			}, editor));
 		} else {
 			editor = new DPEditor('dp-editor-container', {
-				editorId: <%- JSON.stringify(editor.publicId) %>,
-				title: <%- JSON.stringify(editor.title) %>,
+				editorId: editorObj.publicId,
+				title: editorObj.title,
 				settings: {
-					hash: <%- JSON.stringify(editor.hashLine) %>,
+					hash: editorObj.hashLine,
 				},
 			});
 
 			// Build the chart objects
-			var charts = JSON.parse('<%- JSON.stringify(editor.charts) %>');
+			var charts = editorObj.charts;
 			var chartObjects = [];
 			for (var i = 0; i < charts.length; i++) {
 				chartObjects.push(new DPChart({
@@ -129,7 +129,7 @@
 			editor.setActiveChartIdx(0);
 
 			// Build the performer objects
-			var performers = JSON.parse('<%- JSON.stringify(editor.performers) %>');
+			var performers = editorObj.performers;
 			var performerObjects = [];
 			for (var i = 0; i < performers.length; i++) {
 				// Check if there is a group for the symbol, if not create one.

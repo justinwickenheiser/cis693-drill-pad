@@ -24,7 +24,7 @@ module.exports = {
 
 
   fn: async function () {
-
+sails.log(sails.config.datastores.default);
     if (this.req.me) {
       throw {redirect:'/editor'};
     }

@@ -947,7 +947,11 @@ class DPEditor {
 		});
 		// now set how many counts there are in the animation.
 		// theoretically all performers should have the same number of counts in their animationPositionSet
-		this.animation.countMaxCount = this.getDPPerformers()[0].getAnimationPositionSet().length;
+		if (this.getDPPerformers().length) {
+			this.animation.countMaxCount = this.getDPPerformers()[0].getAnimationPositionSet().length;
+		} else {
+			this.animation.countMaxCount = 0;
+		}
 	}
 
 	buildAnimationControls() {

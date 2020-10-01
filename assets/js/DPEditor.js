@@ -15,6 +15,9 @@ class DPEditor {
 		'controls': {
 			// parent,
 		},
+		'animation': {
+			// parent,
+		},
 		'modal': {
 			// the modal to house DPFeature getFormDom()
 		}
@@ -32,7 +35,15 @@ class DPEditor {
 	settings = {
 		'pps': 5,
 		'hash': DP.HASH.COLLEGE
-	}
+	};
+	animation = {
+		loopDelay: 50,
+		active: false,
+		countIteration: 0,
+		countMaxCount: 0,
+		framesPerCount: 24,
+		frameCount: 0,
+	};
 
 	constructor(id, obj) {
 		// Get Paper Set up initially
@@ -304,6 +315,73 @@ class DPEditor {
 		//'width': '980', // This #px is set based on # lines * pps
 		//'height': '550', // This #px is set based on # lines * pps
 
+		// Prepare Animation Container
+		(function() {
+			dpEditor.ui.animation.parent = $('<div>', {
+				'class': dpEditor.ui.class + '-animation'
+			}).appendTo(dpEditor.ui.parent);
+
+			var row, col, p;
+			row = $('<div>', {'class': 'row'}).appendTo(dpEditor.ui.animation.parent);
+			// Starting Chart Select
+			col = $('<div>', {'class': 'col-md-2'}).appendTo(row);
+			p = $('<p>').appendTo(col);
+			$('<label>', {
+				'for': dpEditor.ui.class + '-animation-starting-chart',
+				'text': 'Starting Chart'
+			}).appendTo(p);
+			dpEditor.ui.animation.startingChart = $('<select>', {
+				'id': dpEditor.ui.class + '-animation-starting-chart'
+			}).bind('change', {}, function(event) {
+				dpEditor.setAnimationControls();
+			}).appendTo(p);
+
+			// Play Button
+			col = $('<div>', {'class': 'col-md-8'}).appendTo(row);
+			p = $('<p>', {
+				css: {
+					'text-align': 'center',
+				}
+			}).appendTo(col);
+			$('<label>', {
+				'text': 'Play/Pause'
+			}).appendTo(p);
+			dpEditor.ui.animation.play = $('<a>', {
+				'class': 'btn btn-default',
+				'html': '<span class="fa fa-play"></span>',
+				'title': 'Play'
+			}).bind('mouseup', {}, function(event) {
+				dpEditor.animation.active = true;
+				$(this).hide();
+				$(dpEditor.ui.animation.pause).show();
+			}).appendTo(p);
+			dpEditor.ui.animation.pause = $('<a>', {
+				'class': 'btn btn-default',
+				'html': '<span class="fa fa-pause"></span>',
+				'title': 'Pause',
+				'css': {
+					'display': 'none',
+				}
+			}).bind('mouseup', {}, function(event) {
+				dpEditor.animation.active = false;
+				$(this).hide();
+				$(dpEditor.ui.animation.play).show();
+			}).appendTo(p);
+
+			// Ending Chart Select
+			col = $('<div>', {'class': 'col-md-2'}).appendTo(row);
+			p = $('<p>').appendTo(col);
+			$('<label>', {
+				'for': dpEditor.ui.class + '-animation-ending-chart',
+				'text': 'Ending Chart'
+			}).appendTo(p);
+			dpEditor.ui.animation.endingChart = $('<select>', {
+				'id': dpEditor.ui.class + '-animation-ending-chart'
+			}).bind('change', {}, function(event) {
+				dpEditor.setAnimationControls();
+			}).appendTo(p);
+		})();
+
 		// Controls Container
 		dpEditor.ui.controls.parent = $('<div>', {
 			'class': dpEditor.ui.class + '-controls'
@@ -508,6 +586,28 @@ class DPEditor {
 		paper.setup('canvas');
 		dpEditor.view = view;
 		var field = DP.drawField(dpEditor.settings.pps);
+
+		// Prep the animation
+		dpEditor.view.onFrame = function(event) {
+			if (dpEditor.animation.active) {
+				if (dpEditor.animation.loopDelay == 0) { 
+					if (dpEditor.animation.countIteration < dpEditor.animation.countMaxCount-1) {
+						if (dpEditor.animation.frameCount % dpEditor.animation.framesPerCount == 0) {
+							// after we move x framesPerCount, indicate that we have progressed to the next count.
+							// this will make sure we grab the correct "currentStartingPoint" and "destination" Points
+							dpEditor.animation.countIteration++;
+						}
+					} else {
+						dpEditor.animation.countIteration = 0; // this resets the animation to the starting COUNT
+						dpEditor.animation.loopDelay = 50;
+					}
+				} else {
+					dpEditor.animation.loopDelay--;
+				}
+				// move to the next frame
+				dpEditor.animation.frameCount++;
+			}
+		}
 
 		// prep some <Layers> in the project
 		var referenceLayer = new paper.Layer({
@@ -831,9 +931,40 @@ class DPEditor {
 				case DP.LOGIC.UPDATE_EDGE_POSITIONS.CODE:
 					perf.updateEdgePositionSets(obj.chartId);
 					break;
+				case DP.LOGIC.BUILD_ANIMATION_SET.CODE:
+					perf.buildAnimationPositionSet(obj.startingChartIdx, obj.endingChartIdx);
+					break;
 				default:
 					throw "DPEditor.applyToPerformers: Invalid Method."
 			}
+		}
+	}
+
+	setAnimationControls() {
+		this.applyToPerformers(DP.LOGIC.BUILD_ANIMATION_SET.CODE, {
+			startingChartIdx: parseInt($(this.ui.animation.startingChart).val()),
+			endingChartIdx: parseInt($(this.ui.animation.endingChart).val())
+		});
+		// now set how many counts there are in the animation.
+		// theoretically all performers should have the same number of counts in their animationPositionSet
+		this.animation.countMaxCount = this.getDPPerformers()[0].getAnimationPositionSet().length;
+	}
+
+	buildAnimationControls() {
+		$(this.ui.animation.startingChart).empty();
+		$(this.ui.animation.endingChart).empty();
+		var chart;
+		// starting & ending charts
+		for (var i = 0; i < this.dpChart.length; i++) {
+			chart = this.getDPChart(i);
+			$('<option>', {
+				'value': i,
+				'text': 'Chart ' + chart.getChartNumber().toString()
+			}).appendTo(this.ui.animation.startingChart);
+			$('<option>', {
+				'value': i,
+				'text': 'Chart ' + chart.getChartNumber().toString()
+			}).appendTo(this.ui.animation.endingChart);
 		}
 	}
 
@@ -855,6 +986,8 @@ class DPEditor {
 	}
 
 	redraw() {
+		this.buildAnimationControls();
+		this.setAnimationControls();
 		if (this.dpChart.length) {
 			var chartIdx = this.getActiveChartIdx();
 			var dpChart = this.dpChart[chartIdx];

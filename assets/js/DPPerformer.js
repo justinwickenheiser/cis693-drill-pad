@@ -14,6 +14,7 @@ class DPPerformer extends paper.PointText {
 		//		the length of the array = # counts in chart + 1 (+1 for the initial position index [0])
 	};
 	dpEditor = null;
+	animationPositionSet = [];
 
 	constructor(obj, dpEditor) {
 		super(obj);
@@ -89,6 +90,30 @@ class DPPerformer extends paper.PointText {
 				}
 				this.selected = !this.selected;
 			}
+		}
+
+		// Set up their animation
+		dpPerformer.onFrame = function(event) {
+			var performer = this;
+
+			if (dpEditor.animation.loopDelay == 0 && dpEditor.animation.active) {
+
+				if (dpEditor.animation.countIteration < dpEditor.animation.countMaxCount-1) {
+					var currentStartingPoint =  performer.animationPositionSet[dpEditor.animation.countIteration] ;
+					var destination =  performer.animationPositionSet[dpEditor.animation.countIteration+1] ;
+					var vector = destination.subtract( currentStartingPoint );
+
+					if (dpEditor.animation.frameCount % dpEditor.animation.framesPerCount == 0) {
+						performer.position = destination;
+					} else {
+						performer.position = performer.position.add(vector.divide(dpEditor.animation.framesPerCount));
+					}
+				} else {
+					performer.position = performer.animationPositionSet[0];
+				}
+				performer.updateDrillNumberPosition();
+			}
+
 		}
 	}
 
@@ -556,5 +581,29 @@ class DPPerformer extends paper.PointText {
 			rtnVal[chartId] = jsonArray;
 		});
 		return rtnVal;
+	}
+
+	// Populate the DPPerformer.animationPositionSet which is a 1 dim array of all <Point>s in chart/count order
+	buildAnimationPositionSet(startingChartIdx, endingChartIdx) {
+		this.animationPositionSet = []; // clear the positionSet
+
+		var charts = this.dpEditor.getDPCharts();
+		// If the ending chart is before the starting one, set the end to the last chartIdx
+		if (endingChartIdx < startingChartIdx) {
+			endingChartIdx = charts.length-1;
+		}
+
+		for (var c = startingChartIdx; c <= endingChartIdx; c++) {
+			var chartPositions = this.getPositionSets( charts[c].getChartId() );
+			// if not the first chart we chop the first position off because that is the same as the previous chart's last position.
+			if (c > startingChartIdx) {
+				this.animationPositionSet = this.animationPositionSet.concat( chartPositions.slice(1) );
+			} else {
+				this.animationPositionSet = this.animationPositionSet.concat( chartPositions );
+			}
+		}
+	}
+	getAnimationPositionSet() {
+		return this.animationPositionSet;
 	}
 }

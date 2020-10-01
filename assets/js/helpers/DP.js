@@ -58,6 +58,10 @@ class DP {
 		UPDATE_EDGE_POSITIONS: {
 			CODE: 26,
 			PARAMS: ['chartId']
+		},
+		BUILD_ANIMATION_SET: {
+			CODE: 27,
+			PARAMS: ['startingChartIdx', 'endingChartIdx']
 		}
 	};
 	static FIELD_REFERENCE_ORDER = {

@@ -380,6 +380,8 @@ class DPEditor {
 			}).bind('change', {}, function(event) {
 				dpEditor.setAnimationControls();
 			}).appendTo(p);
+
+			$('<hr>').appendTo(dpEditor.ui.animation.parent);
 		})();
 
 		// Controls Container

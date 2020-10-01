@@ -17,7 +17,7 @@ module.exports = {
 
 
   fn: async function () {
-    var user = await User.findOne({
+    var user = await DPUser.findOne({
       id: this.req.session.userId,
     }).populate('editors');
     

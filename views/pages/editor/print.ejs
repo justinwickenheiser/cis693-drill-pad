@@ -1,0 +1,194 @@
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<style type="text/css">
+	#page-header, #page-footer {
+		display: none;
+	}
+	@page {
+		size: landscape;
+	}
+	hr {
+		page-break-after: always;
+	}
+	.row, .col-md-3, .col-md-6 {
+		display: block;
+	}
+	.col-md-3, .col-md-6 {
+		float: left;
+	}
+	.col-md-3 {
+		width: 25%;
+	}
+	.col-md-6 {
+		width: 50%;
+	}
+	.row:before, .row:after {
+		content: " ";
+		display: table;
+	}
+	.row:after {
+		clear: both;
+	}
+</style>
+<div id="print" v-cloak>
+	<div id="non-print-container">
+		<div id="dp-editor-container">
+			<!-- Loading... -->
+		</div>
+	</div>
+	<div id="print-container" class="editor-print">
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var editorObj = JSON.parse('<%- JSON.stringify(editor) %>');
+		var editor = new DPEditor('dp-editor-container', {
+			editorId: editorObj.publicId,
+			title: editorObj.title,
+			settings: {
+				hash: editorObj.hashLine,
+			},
+		});
+
+		// Build the chart objects
+		var charts = editorObj.charts;
+		var chartObjects = [];
+		for (var i = 0; i < charts.length; i++) {
+			chartObjects.push(new DPChart({
+				'chartId': charts[i].chartId,
+				'chartNumber': parseInt(charts[i].chartNumber),
+				'title': charts[i].title,
+				'counts': parseInt(charts[i].counts),
+				'activeCountIdx': 0
+			}, editor));
+		}
+		// Now set the charts for the editor
+		editor.setDPCharts(chartObjects);
+		editor.setActiveChartIdx(0);
+
+		// Build the performer objects
+		var performers = editorObj.performers;
+		var performerObjects = [];
+		for (var i = 0; i < performers.length; i++) {
+			// Check if there is a group for the symbol, if not create one.
+			var group = project.getItem({className: 'Group', name: performers[i].symbol});
+			if (!group) {
+				group = new paper.Group({name: performers[i].symbol, parent: project.getItem({className: 'Layer', name: 'performer'})});
+			}
+
+			performerObjects.push(new DPPerformer({
+				'performerId': performers[i].performerId,
+				'drillNumber': { number: parseInt(performers[i].drillNumber.number) },
+				'positionSet': performers[i].positionSet,
+				content: performers[i].symbol,
+				fillColor: 'black',
+				fontFamily: 'Arial',
+				parent: group
+			}, editor));
+		}
+		// Set the performers in the editor
+		editor.setDPPerformers(performerObjects);
+
+		// Now that it is all set up, let's prepare it for print:
+		// sounds like I need a new PaperScope
+		var printScope = new paper.PaperScope();
+		$('#non-print-container').hide();
+		$('#print-container').empty();
+		var canvas;
+
+		for (var i=0; i<editor.getDPCharts().length; i++) {
+			var chart = editor.getDPChart(i);
+			canvas = $('<canvas>', {
+				id: 'canvas_'+i,
+				width: 980,
+				height: 550
+			});
+
+			$('#print-container').append(buildChartHeader(chart, editor));
+			$('#print-container').append(canvas);
+			if (i != editor.getDPCharts().length-1) {
+				$('#print-container').append($('<hr />'));
+			}
+
+			// The set up has to happen after the canvas is appended to DOM
+			printScope.setup('canvas_'+i);
+
+			DP.drawField(editor.settings.pps, {
+				hash: editor.settings.hash
+			});
+
+			var printLayer = new printScope.Layer({
+				name: 'print'
+			});
+
+			var performers = editor.getDPPerformers();
+			for (var perf=0; perf<performers.length; perf++) {
+				var chartInitPos = performers[perf].getPositionSet(chart.getChartId(), 0);
+				var tmp = new printScope.PointText({
+					point: chartInitPos,
+					content: performers[perf].content,
+					fillColor: 'black',
+					fontFamily: 'Arial',
+					parent: printLayer
+				});
+				// This centers the PointText on the specified point
+				tmp.position = chartInitPos;
+			}
+
+		}
+		(function() {
+
+			var beforePrint = function() {};
+
+			var afterPrint = function() {
+				window.close();
+			};
+
+			if (window.matchMedia) {
+				var mediaQueryList = window.matchMedia('print');
+				mediaQueryList.addListener(function(mql) {
+					if (mql.matches) {
+						beforePrint();
+					} else {
+						afterPrint();
+					}
+				});
+			}
+
+			window.onbeforeprint = beforePrint;
+			window.onafterprint = afterPrint;
+
+		}());
+		window.print();
+	});
+
+	function buildChartHeader(chart, editor) {
+		var dom = $('<div>', {
+			'class': 'print-chart-information'
+		});
+		var row, col1, col2, col3;
+		row = $('<div>',{
+			class: 'row'
+		}).appendTo(dom);
+		col1 = $('<div>',{
+			class: 'col-md-3'
+		}).appendTo(row);
+		col2 = $('<div>',{
+			class: 'col-md-6'
+		}).appendTo(row);
+		col3 = $('<div>',{
+			class: 'col-md-3'
+		}).appendTo(row);
+		$('<span>',{
+			text: 'Chart: ' + chart.getChartNumber().toString() + ' / ' + editor.getDPCharts().length
+		}).appendTo(col1);
+		$('<span>',{
+			text: chart.getTitle()
+		}).appendTo(col2);
+		$('<span>',{
+			text: 'Counts: ' + chart.getCounts().toString()
+		}).appendTo(col3);
+
+		return dom;
+	}
+</script>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

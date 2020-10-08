@@ -5,85 +5,88 @@
 	}
 </style>
 <div id="edit" v-cloak>
-
-	<div id="dp-editor-container">
-		<!-- Loading... -->
-	</div>
-	<div id="dp-content-loading">
-		<p>
-			<strong>Loading editor...</strong>
-		</p>
-		<p class="muted">
-			If you continue to see this message for more than 30 seconds, you may have JavaScript disabled or the editor may have failed to load.
-		</p>
-	</div>
-	<!-- Directions / Info -->
-	<div class="dp-info">
-		<div class="row">
-			<div class="col-md-4">
-				<h2>Adding a Chart</h2>
-				<p>
-					Click the <code>[+]</code> button at the top of the toolbar. This will do the following:
-					<ol>
-						<li>Create a new DPChart</li>
-						<li>Add the chart to the end of the editor's array of charts</li>
-						<li>Set the new chart as the active chart</li>
-					</ol>
-				</p>
+	<div id="non-print-container">
+		<div id="dp-editor-container">
+			<!-- Loading... -->
+		</div>
+		<div id="dp-content-loading">
+			<p>
+				<strong>Loading editor...</strong>
+			</p>
+			<p class="muted">
+				If you continue to see this message for more than 30 seconds, you may have JavaScript disabled or the editor may have failed to load.
+			</p>
+		</div>
+		<!-- Directions / Info -->
+		<div class="dp-info">
+			<div class="row">
+				<div class="col-md-4">
+					<h2>Adding a Chart</h2>
+					<p>
+						Click the <code>[+]</code> button at the top of the toolbar. This will do the following:
+						<ol>
+							<li>Create a new DPChart</li>
+							<li>Add the chart to the end of the editor's array of charts</li>
+							<li>Set the new chart as the active chart</li>
+						</ol>
+					</p>
+				</div>
+				<div class="col-md-4">
+					<h2>Pan / Zoom</h2>
+					<p>
+						<code>shift + [scroll]</code> will Pan<br />
+						<code>alt + [scroll]</code> will Zoom
+					</p>
+				</div>
+				<div class="col-md-4">
+					<h2>Snap To Grid</h2>
+					<p>
+						Holding <code>shift</code> will activate "Snap-to-Grid" for the following situations:
+						<ul>
+							<li>Adding Performers</li>
+							<li>Drag / Drop Performers</li>
+							<li>Drawing Reference Objects</li>
+						</ul>
+					</p>
+				</div>
 			</div>
-			<div class="col-md-4">
-				<h2>Pan / Zoom</h2>
-				<p>
-					<code>shift + [scroll]</code> will Pan<br />
-					<code>alt + [scroll]</code> will Zoom
-				</p>
-			</div>
-			<div class="col-md-4">
-				<h2>Snap To Grid</h2>
-				<p>
-					Holding <code>shift</code> will activate "Snap-to-Grid" for the following situations:
-					<ul>
-						<li>Adding Performers</li>
-						<li>Drag / Drop Performers</li>
-						<li>Drawing Reference Objects</li>
-					</ul>
-				</p>
+			<div class="row">
+				<div class="col-md-4">
+					<h2>Reference Objects</h2>
+					<p>
+						Click the <code>[<span class="fa fa-pencil"></span>]</code> button in the toolbar. This will add control fields under the Editor. There are 4 types of references:
+						<ul>
+							<li>Point</li>
+							<li>Circle</li>
+							<li>Rectangle</li>
+							<li>Arc</li>
+						</ul>
+					</p>
+					<strong>Point</strong>
+					<p>A simple reference point that is created on mouse-down.</p>
+					<strong>Circle</strong>
+					<p>
+						The first click marks the center of the reference circle, then drag to the desired radius. This type of reference object can add individual reference points on the circle based on the number provided in the "Number of Points to Add" field.
+					</p>
+					<strong>Rectangle</strong>
+					<p>
+						The rectangle makes use of the "Spacing Front-to-Back" and "Spacing Left-to-Right" fields to populate reference points in a grid.
+					</p>
+					<strong>Arc</strong>
+					<p>
+						The arc can specify an existing reference point that will be used to connect the beginning and end of the reference arc.
+					</p>
+				</div>
+				<div class="col-md-4">
+					
+				</div>
+				<div class="col-md-4">
+					
+				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-4">
-				<h2>Reference Objects</h2>
-				<p>
-					Click the <code>[<span class="fa fa-pencil"></span>]</code> button in the toolbar. This will add control fields under the Editor. There are 4 types of references:
-					<ul>
-						<li>Point</li>
-						<li>Circle</li>
-						<li>Rectangle</li>
-						<li>Arc</li>
-					</ul>
-				</p>
-				<strong>Point</strong>
-				<p>A simple reference point that is created on mouse-down.</p>
-				<strong>Circle</strong>
-				<p>
-					The first click marks the center of the reference circle, then drag to the desired radius. This type of reference object can add individual reference points on the circle based on the number provided in the "Number of Points to Add" field.
-				</p>
-				<strong>Rectangle</strong>
-				<p>
-					The rectangle makes use of the "Spacing Front-to-Back" and "Spacing Left-to-Right" fields to populate reference points in a grid.
-				</p>
-				<strong>Arc</strong>
-				<p>
-					The arc can specify an existing reference point that will be used to connect the beginning and end of the reference arc.
-				</p>
-			</div>
-			<div class="col-md-4">
-				
-			</div>
-			<div class="col-md-4">
-				
-			</div>
-		</div>
+	</div>
+	<div id="print-container">
 	</div>
 </div>
 

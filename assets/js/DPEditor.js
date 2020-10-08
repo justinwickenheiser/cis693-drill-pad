@@ -572,6 +572,14 @@ class DPEditor {
 				'buttonSetting': 'default',
 				'object': 'DPSave'
 			},
+			{
+				'folder': 'print',
+				'featureId': uuidv4(),
+				'icon': 'print',
+				'title': 'Print',
+				'buttonSetting': 'default',
+				'object': 'DPPrint'
+			},
 
 		];
 

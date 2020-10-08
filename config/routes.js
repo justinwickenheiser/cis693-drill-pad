@@ -37,6 +37,7 @@ module.exports.routes = {
   'GET /editor/index':       { action: 'editor/view-index' },
   'GET /editor/edit':        { action: 'editor/view-edit' },
   'GET /editor/edit/:editorId': { action: 'editor/view-edit' },
+  'GET /editor/print/:editorId': { action: 'editor/view-print' },
 
 
   //  ╔╦╗╦╔═╗╔═╗  ╦═╗╔═╗╔╦╗╦╦═╗╔═╗╔═╗╔╦╗╔═╗   ┬   ╔╦╗╔═╗╦ ╦╔╗╔╦  ╔═╗╔═╗╔╦╗╔═╗

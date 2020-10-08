@@ -68,3 +68,11 @@
 .editor-chart-information .btn-default:visited {
 	color: #232323; 
 }
+
+
+.editor-print {
+	text-align: center;
+}
+.print-chart-information {
+	margin: 1em 0;
+}

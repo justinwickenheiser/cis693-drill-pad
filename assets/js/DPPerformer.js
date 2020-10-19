@@ -606,4 +606,48 @@ class DPPerformer extends paper.PointText {
 	getAnimationPositionSet() {
 		return this.animationPositionSet;
 	}
+	getPrintRender(chartId, printLayer, scope) {
+		var dpPerformer = this;
+		var chartInitPos = dpPerformer.getPositionSet(chartId, 0);
+		var tmp = new scope.PointText({
+			point: chartInitPos,
+			content: dpPerformer.content,
+			fillColor: 'black',
+			fontFamily: 'Arial',
+			parent: printLayer,
+		});
+		// This centers the PointText on the specified point
+		tmp.position = chartInitPos;
+
+
+		// Build the number & line
+		var numPoint = new scope.Point({
+			length: 15,
+			angle: dpPerformer.drillNumber.angle
+		});
+		var point = chartInitPos.add(numPoint);
+		var num = new scope.PointText({
+			content: dpPerformer.drillNumber.number,
+			point: point,
+			fillColor: 'black',
+			fontFamily: 'Arial',
+			fontSize: '8px',
+			name: 'drillNumber'
+		});
+		num.position = point;
+
+		var vector = num.position.subtract(chartInitPos);
+		var linePoint = new scope.Point({
+			length: 10,
+			angle: vector.angle
+		});
+
+		var line = new scope.Path({
+			segments: [chartInitPos, chartInitPos.add(linePoint)],
+			strokeColor: 'red',
+			name: 'line'
+		});
+
+		return new Group(tmp, num, line);
+	}
 }

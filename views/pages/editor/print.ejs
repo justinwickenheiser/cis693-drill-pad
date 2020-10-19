@@ -94,7 +94,7 @@
 
 			var beforePrint = function() {};
 			var afterPrint = function() {
-				// window.close();
+				window.close();
 			};
 
 			if (window.matchMedia) {
@@ -154,16 +154,7 @@
 
 			var performers = editor.getDPPerformers();
 			for (var perf=0; perf<performers.length; perf++) {
-				var chartInitPos = performers[perf].getPositionSet(chart.getChartId(), 0);
-				var tmp = new printScope.PointText({
-					point: chartInitPos,
-					content: performers[perf].content,
-					fillColor: 'black',
-					fontFamily: 'Arial',
-					parent: printLayer,
-				});
-				// This centers the PointText on the specified point
-				tmp.position = chartInitPos;
+				performers[perf].getPrintRender(chart.getChartId(), printLayer, printScope);
 			}
 
 		}

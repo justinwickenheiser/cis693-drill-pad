@@ -94,7 +94,7 @@
 
 			var beforePrint = function() {};
 			var afterPrint = function() {
-				window.close();
+				// window.close();
 			};
 
 			if (window.matchMedia) {
@@ -112,7 +112,12 @@
 			window.onafterprint = afterPrint;
 
 		}());
-		window.setTimeout(window.print(), 1250);
+		window.setInterval(function() {
+			console.log(project.getItems({class: 'PointText'}));
+			if (project.getItems({class: 'PointText'}).length) {
+				window.print();
+			}
+		}, 1000);
 	});
 
 	function prepareChartCanvases(editor) {
@@ -155,7 +160,7 @@
 					content: performers[perf].content,
 					fillColor: 'black',
 					fontFamily: 'Arial',
-					parent: printLayer
+					parent: printLayer,
 				});
 				// This centers the PointText on the specified point
 				tmp.position = chartInitPos;

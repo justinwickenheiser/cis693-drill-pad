@@ -89,6 +89,33 @@
 		editor.setDPPerformers(performerObjects);
 
 		// Now that it is all set up, let's prepare it for print:
+		prepareChartCanvases(editor);
+		(function() {
+
+			var beforePrint = function() {};
+			var afterPrint = function() {
+				window.close();
+			};
+
+			if (window.matchMedia) {
+				var mediaQueryList = window.matchMedia('print');
+				mediaQueryList.addListener(function(mql) {
+					if (mql.matches) {
+						beforePrint();
+					} else {
+						afterPrint();
+					}
+				});
+			}
+
+			window.onbeforeprint = beforePrint;
+			window.onafterprint = afterPrint;
+
+		}());
+		window.setTimeout(window.print(), 1250);
+	});
+
+	function prepareChartCanvases(editor) {
 		// sounds like I need a new PaperScope
 		var printScope = new paper.PaperScope();
 		$('#non-print-container').hide();
@@ -135,31 +162,7 @@
 			}
 
 		}
-		(function() {
-
-			var beforePrint = function() {};
-
-			var afterPrint = function() {
-				window.close();
-			};
-
-			if (window.matchMedia) {
-				var mediaQueryList = window.matchMedia('print');
-				mediaQueryList.addListener(function(mql) {
-					if (mql.matches) {
-						beforePrint();
-					} else {
-						afterPrint();
-					}
-				});
-			}
-
-			window.onbeforeprint = beforePrint;
-			window.onafterprint = afterPrint;
-
-		}());
-		window.print();
-	});
+	}
 
 	function buildChartHeader(chart, editor) {
 		var dom = $('<div>', {

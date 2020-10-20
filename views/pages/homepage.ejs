@@ -90,6 +90,14 @@
 	var editor;
 	$(document).ready(function () {
 		editor = new DPEditor('dp-editor-container');
+		// Now add the 1st chart, because we always want at least 1 chart
+		editor.setDPChart(new DPChart({
+			'chartId': uuidv4(),
+			'chartNumber': 1,
+			'counts': 0,
+			'activeCountIdx': 0
+		}, editor));
+		
 		editor.redraw();
 		console.log(editor);
 		$('#dp-content-loading').toggle();

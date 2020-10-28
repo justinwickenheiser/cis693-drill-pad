@@ -565,6 +565,14 @@ class DPEditor {
 				'object': 'DPChartSettings'
 			},
 			{
+				'folder': 'chartmanager',
+				'featureId': uuidv4(),
+				'icon': 'folder-open',
+				'title': 'Manage Charts',
+				'buttonSetting': 'active',
+				'object': 'DPChartManager'
+			},
+			{
 				'folder': 'save',
 				'featureId': uuidv4(),
 				'icon': 'save',
@@ -944,6 +952,9 @@ class DPEditor {
 				case DP.LOGIC.BUILD_ANIMATION_SET.CODE:
 					perf.buildAnimationPositionSet(obj.startingChartIdx, obj.endingChartIdx);
 					break;
+				case DP.LOGIC.REMOVE_CHARTID_FROM_POSITIONSET.CODE:
+					perf.removePositionSet(obj.chartId);
+					break;
 				default:
 					throw "DPEditor.applyToPerformers: Invalid Method."
 			}
@@ -1009,7 +1020,7 @@ class DPEditor {
 			var countIdx = dpChart.getActiveCountIdx();
 
 			// Set the Chart Header information
-			document.getElementById('chartNumber').innerText = dpChart.getChartNumber().toString() + ' / ' + this.dpChart.length;
+			document.getElementById('chartNumber').innerText = (this.activeChartIdx + 1) + ' / ' + this.dpChart.length;
 			document.getElementById('countNumber').innerText = countIdx.toString() + ' / ' + dpChart.getCounts().toString();
 
 			// ====================================

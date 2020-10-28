@@ -14,8 +14,8 @@ class DP {
 		BR: 14
 	}
 	static ROTATE = {
-		CW: 25,
-		CCW: 26
+		CW: 29,
+		CCW: 30
 	}
 	static STEP = {
 		STND: 5,
@@ -62,6 +62,10 @@ class DP {
 		BUILD_ANIMATION_SET: {
 			CODE: 27,
 			PARAMS: ['startingChartIdx', 'endingChartIdx']
+		},
+		REMOVE_CHARTID_FROM_POSITIONSET: {
+			CODE: 28,
+			PARAMS: ['chartId']
 		}
 	};
 	static FIELD_REFERENCE_ORDER = {

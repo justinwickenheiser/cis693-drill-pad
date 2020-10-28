@@ -6,6 +6,7 @@ class DPDrawReference extends DPFeature {
 	onclick() {
 		dpEditor.ui.controls.parent.empty();
 		this.setControlDom();
+		this.toggleElements();
 
 		// TEMP:
 		var fnSet = DP.getFnSet(DP.FNSET.DRAW_POINT);
@@ -68,6 +69,7 @@ class DPDrawReference extends DPFeature {
 		}));
 		select.bind('change',{}, function() {
 			dpDrawReference.updateDrawReferenceFnSet();
+			dpDrawReference.toggleElements();
 
 			if (parseInt(this.value) == DP.FNSET.DRAW_ARC) {
 				// If Arc: populate the arcThroughPoint Select
@@ -87,10 +89,28 @@ class DPDrawReference extends DPFeature {
 			}
 		});
 
+		// Number of Points To Add
+		p = $('<p>', {
+			id: 'numPointContainer'
+		}).appendTo(col2);
+		label = $('<label>', {
+			for: 'numPoint',
+			text: 'Number of Points to Add'
+		}).appendTo(p);
+		input = $('<input>', {
+			id: 'numPoint',
+			name: 'numPoint',
+			type: 'number',
+			value: '0'
+		}).appendTo(p);
+		input.bind('change',{}, function() {
+			dpDrawReference.updateDrawReferenceFnSet();
+		});
+
 		// Arc Through Point
 		p = $('<p>', {
 			id: 'arcThroughPointContainer'
-		}).appendTo(col2);
+		}).appendTo(col3);
 		label = $('<label>', {
 			for: 'arcThroughPoint',
 			text: 'Arc Through Point'
@@ -116,40 +136,12 @@ class DPDrawReference extends DPFeature {
 			dpDrawReference.updateDrawReferenceFnSet();
 		});
 
-		// Arc Through Point
-		p = $('<p>', {
-			id: 'numPointContainer'
-		}).appendTo(col3);
-		label = $('<label>', {
-			for: 'numPoint',
-			text: 'Number of Points to Add'
-		}).appendTo(p);
-		input = $('<input>', {
-			id: 'numPoint',
-			name: 'numPoint',
-			type: 'number',
-			value: '0'
-		}).appendTo(p);
-		input.bind('change',{}, function() {
-			dpDrawReference.updateDrawReferenceFnSet();
-		});
-
 
 		// FOR THE RECTANGLE
-		row = $('<div>',{
-			class: 'row'
-		}).appendTo(dpEditor.ui.controls.parent);
-		col1 = $('<div>',{
-			class: 'col-md-3'
-		}).appendTo(row);
-		col2 = $('<div>',{
-			class: 'col-md-3'
-		}).appendTo(row);
-		
 		// Spacing Front-to-Back
 		p = $('<p>', {
 			id: 'spacingFBContainer'
-		}).appendTo(col1);
+		}).appendTo(col2);
 		label = $('<label>', {
 			for: 'spacingFB',
 			text: 'Spacing Front-to-Back'
@@ -174,7 +166,7 @@ class DPDrawReference extends DPFeature {
 		// Spacing Left-to-Right
 		p = $('<p>', {
 			id: 'spacingLRContainer'
-		}).appendTo(col2);
+		}).appendTo(col3);
 		label = $('<label>', {
 			for: 'spacingLR',
 			text: 'Spacing Left-to-Right'
@@ -245,6 +237,24 @@ class DPDrawReference extends DPFeature {
 		dpEditor.view.onMouseDown = fnSet.onMouseDown;
 		dpEditor.view.onMouseDrag = fnSet.onMouseDrag;
 		dpEditor.view.onMouseUp = fnSet.onMouseUp;
+	}
+
+	// Show/hide the correct elements based on what referenceType is selected
+	toggleElements() {
+		var referenceType = parseInt( $('#referenceType').val() );
+		$('#numPointContainer').hide();
+		$('#arcThroughPointContainer').hide();
+		$('#spacingFBContainer').hide();
+		$('#spacingLRContainer').hide();
+		if (referenceType === DP.FNSET.DRAW_CIRCLE) {
+			$('#numPointContainer').show();
+		} else if (referenceType === DP.FNSET.DRAW_RECTANGLE) {
+			$('#spacingFBContainer').show();
+			$('#spacingLRContainer').show();
+		} else if (referenceType === DP.FNSET.DRAW_ARC) {
+			$('#arcThroughPointContainer').show();
+			$('#numPointContainer').show();
+		}
 	}
 
 	

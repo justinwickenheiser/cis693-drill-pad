@@ -151,6 +151,9 @@ class DPPerformer extends paper.PointText {
 		}
 		return false;
 	}
+	getDrillNumberElement() {
+		return this.drillNumberElement;
+	}
 	buildDrillNumberElement() {
 		var numPoint = new paper.Point({
 			length: 15,

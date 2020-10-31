@@ -420,6 +420,10 @@ class DPEditor {
 		dpEditor.ui.toolbar.feature = $('<div>', {
 			'class': 'btn-group btn-group-vertical'
 		}).appendTo(btnToolbar);
+		// Manager Feature Buttons
+		dpEditor.ui.toolbar.managerFeature = $('<div>', {
+			'class': 'btn-group btn-group-vertical'
+		}).appendTo(btnToolbar);
 
 		function fnLoad(obj, appendLocation) {
 			$.ajax({
@@ -500,14 +504,7 @@ class DPEditor {
 				'buttonSetting': 'active',
 				'object': 'DPDrawReference'
 			},
-			{
-				'folder': 'referencemanager',
-				'featureId': uuidv4(),
-				'icon': 'eye',
-				'title': 'Manage References',
-				'buttonSetting': 'active',
-				'object': 'DPReferenceManager'
-			},
+			
 			{
 				'folder': 'pointer',
 				'featureId': uuidv4(),
@@ -564,14 +561,7 @@ class DPEditor {
 				'buttonSetting': 'default',
 				'object': 'DPChartSettings'
 			},
-			{
-				'folder': 'chartmanager',
-				'featureId': uuidv4(),
-				'icon': 'folder-open',
-				'title': 'Manage Charts',
-				'buttonSetting': 'active',
-				'object': 'DPChartManager'
-			},
+
 			{
 				'folder': 'save',
 				'featureId': uuidv4(),
@@ -588,15 +578,44 @@ class DPEditor {
 				'buttonSetting': 'default',
 				'object': 'DPPrint'
 			},
+			// Manager Features
+			{
+				'folder': 'chartmanager',
+				'featureId': uuidv4(),
+				'icon': 'folder',
+				'title': 'Manage Charts',
+				'buttonSetting': 'active',
+				'object': 'DPChartManager'
+			},
+			{
+				'folder': 'performermanager',
+				'featureId': uuidv4(),
+				'icon': 'users',
+				'title': 'Manage Performers',
+				'buttonSetting': 'active',
+				'object': 'DPPerformerManager'
+			},
+			{
+				'folder': 'referencemanager',
+				'featureId': uuidv4(),
+				'icon': 'eye',
+				'title': 'Manage References',
+				'buttonSetting': 'active',
+				'object': 'DPReferenceManager'
+			},
 
 		];
 
 		for (var i = 0; i < tempFeatures.length; i++) {
-			if (tempFeatures[i].object !== 'DPEditorSettings' && tempFeatures[i].object !== 'DPChartSettings') {
-				fnLoad(tempFeatures[i], dpEditor.ui.toolbar.feature);
-			} else {
+			if (tempFeatures[i].object == 'DPEditorSettings' || tempFeatures[i].object == 'DPChartSettings') {
 				// The DPChartSettings needs to be appended in a different area.
 				fnLoad(tempFeatures[i], dpEditor.ui.chartHeader.settings);
+			} else if (tempFeatures[i].object == 'DPChartManager' || tempFeatures[i].object == 'DPPerformerManager' || tempFeatures[i].object == 'DPReferenceManager') {
+				// Manager Features go under a different button group
+				fnLoad(tempFeatures[i], dpEditor.ui.toolbar.managerFeature);
+			} else {
+				// Standard Feature Buttons
+				fnLoad(tempFeatures[i], dpEditor.ui.toolbar.feature);
 			}
 		}
 
@@ -862,6 +881,12 @@ class DPEditor {
 	}
 	removeDPPerformer(idx) {
 		if (idx >=0 && idx < this.dpPerformer.length) {
+			var perf = this.getDPPerformer(idx);
+			// Remove the performer's number PaperJs Group element
+			perf.getDrillNumberElement().remove();
+			// Remove the performer from PaperJs
+			perf.remove();
+			// Remove the performer from the editor's list of performers
 			this.dpPerformer.splice(idx, 1);
 		}
 		return true;

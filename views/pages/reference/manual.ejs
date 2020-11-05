@@ -1,0 +1,125 @@
+<style type="text/css">
+	.content {
+		margin-top: 1em;
+		margin-bottom: 1em;
+	}
+</style>
+<div class="container" id="manual" v-cloak>
+	<div class="row content">
+		<div class="col-md-3">
+			<ul class="well">
+				<li><a href="#CreatingAShow">Creating a Show</a></li>
+				<li><a href="#Editor">The Editor</a></li>
+				<li>
+					<a href="#Helpers">Helpers</a>
+					<ul>
+						<li>Pan/Zoom</li>
+						<li>Snap To Grid</li>
+					</ul>
+				</li>
+				<li>
+					<span>Features</span>
+					<ul>
+						<li><a href="#EditorSettings">Editor Settings</a></li>
+						<li><a href="#ChartSettings">Chart Settings</a></li>
+						<li><a href="#AddChart">Add Chart</a></li>
+						<li><a href="#AddPerformer">Add Performer</a></li>
+						<li><a href="#DrawReference">Draw Reference Objects</a></li>
+						<li><a href="#Pointer">Pointer</a></li>
+						<li><a href="#Select">Select</a></li>
+						<li><a href="#MovePerformer">Move Performer</a></li>
+						<li><a href="#RotatePerformer">Rotate Performer</a></li>
+						<li><a href="#ResetZoom">Reset Zoom</a></li>
+						<li><a href="#ViewAnimation">View Animation</a></li>
+						<li><a href="#Save">Save</a></li>
+						<li><a href="#Print">Print</a></li>
+						<li><a href="#ManageCharts">Manage Charts</a></li>
+						<li><a href="#ManagePerformers">Manage Performers</a></li>
+						<li><a href="#ManageReferences">Manage References</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="col-md-9">
+			<h1>Reference Guide</h1>
+			<a id="CreatingAShow"></a>
+			<h2>Creating A Show</h2>
+			<p>
+				First, you will need to login. If you do not have an account, you can <a href="/signup">sign up</a>. After you are logged in, you will see a list of your existing shows. This is where you can create a new show or edit existing shows. Creating or editing shows will open up the Editor.
+			</p>
+
+			<a id="Editor"></a>
+			<h2>The Editor</h2>
+			<p>
+				The editor is where the magic happens. The editor is broken into 4 sections:
+				<ol>
+					<li><em>Field</em>: the grid that represents the marching field</li>
+					<li><em>Header Panel</em>: sits above the <em>Field</em></li>
+					<li><em>Toolbar</em>: sits to the right of the <em>Field</em> and contains the different <em>Features</em></li>
+					<li><em>Control Panel</em>: site below the <em>Field</em> and will be populated with different inputs and controls based on the selected <em>Feature</em></li>
+				</ol>
+			</p>
+
+			<h2>Helpers</h2>
+			<a id="Helpers"></a>
+			<div class="row">
+				<div class="col-md-4">
+					<h3>Pan / Zoom</h3>
+					<p>
+						<code>shift + [scroll]</code> over the <em>Field</em> will Pan<br />
+						<code>alt + [scroll]</code> over the <em>Field</em> will Zoom<br />
+						Click the <code>[<span class="fa fa-search"></span>]</code> button in the <em>Toolbar</em> to reset the <em>Field's</em> Pan/Zoom.
+					</p>
+				</div>
+				<div class="col-md-4">
+					<h3>Snap To Grid</h3>
+					<p>
+						Holding <code>shift</code> will activate "Snap-to-Grid" for the following situations:
+						<ul>
+							<li>Adding Performers</li>
+							<li>Drag / Drop Performers</li>
+							<li>Drawing Reference Objects</li>
+						</ul>
+					</p>
+				</div>
+			</div>
+
+			<h2>Features</h2>
+			<a id="EditorSettings"></a>
+			<h3>Editor Settings</h3>
+			<p>
+				Click the <code>[<span class="fa fa-cogs"></span>]</code> button in the <em>Header Panel</em>. This will open a modal that allows you to give the show a title and specify which Hash setting to use. You can switch between College and High School hashes. Changing the Hash setting can be done at any time as it will only re-draw the underlying grid for the field to move the hash lines.
+			</p>
+			<a id="ChartSettings"></a>
+			<h3>Chart Settings</h3>
+			<p>
+				Click the <code>[<span class="fa fa-cog"></span>]</code> button in the <em>Header Panel</em>. This will open a modal that allows you to give the active chart a title and specify how many counts it will take to move to the next chart. The number of counts cannot be a negative number. Zero counts is an acceptable value. This is because count 0 acts as the initial position of the chart (where the performer should be at the beginning of the chart).
+			</p>
+			<p>
+				Stepping through various counts can be done using the left and right arrow buttons on the right side of the <em>Header Panel</em>. Let's say the active count for the chart is 8 and there are 32 counts to get from the active chart to the next chart. The <em>Header Panel</em> will read <code>Count: 8 / 32</code>. Using that example, a performer's position on the <em>Field</em> can be accurately read as <em>"The Performer will be in this position <strong>after</strong> 8 counts"</em>.
+			</p>
+			<p>
+				The last count of every chart will <strong>always</strong> be the exact same and count 0 of the next chart. If a performer's position is updated on a given chart, the position for the last count of the previous chart is updated to the initial position (count 0) of the active chart, and the initial position (count 0) of the next chart is updated to last count's position of the current chart. These updates happen automatically and behind the scene, but just be aware that it happens.
+			</p>
+
+			<a id="AddChart"></a>
+			<h3>Add Chart</h3>
+			<p>
+				Click the <code>[+]</code> button at the top of the toolbar. This will do the following:
+				<ol>
+					<li>Create a new chart</li>
+					<li>Add the chart to the end of the editor's list of charts</li>
+					<li>Set the new chart as the active chart</li>
+					<li>Call the Chart Settings feature to allow the user to set the Title and Counts</li>
+				</ol>
+			</p>
+
+			<a id="AddPerformer"></a>
+			<h3>Add Performer</h3>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

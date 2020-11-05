@@ -15,9 +15,6 @@ class DPEditor {
 		'controls': {
 			// parent,
 		},
-		'animation': {
-			// parent,
-		},
 		'modal': {
 			// the modal to house DPFeature getFormDom()
 		}
@@ -315,75 +312,6 @@ class DPEditor {
 		//'width': '980', // This #px is set based on # lines * pps
 		//'height': '550', // This #px is set based on # lines * pps
 
-		// Prepare Animation Container
-		(function() {
-			dpEditor.ui.animation.parent = $('<div>', {
-				'class': dpEditor.ui.class + '-animation'
-			}).appendTo(dpEditor.ui.parent);
-
-			var row, col, p;
-			row = $('<div>', {'class': 'row'}).appendTo(dpEditor.ui.animation.parent);
-			// Starting Chart Select
-			col = $('<div>', {'class': 'col-md-2'}).appendTo(row);
-			p = $('<p>').appendTo(col);
-			$('<label>', {
-				'for': dpEditor.ui.class + '-animation-starting-chart',
-				'text': 'Starting Chart'
-			}).appendTo(p);
-			dpEditor.ui.animation.startingChart = $('<select>', {
-				'id': dpEditor.ui.class + '-animation-starting-chart'
-			}).bind('change', {}, function(event) {
-				dpEditor.setAnimationControls();
-			}).appendTo(p);
-
-			// Play Button
-			col = $('<div>', {'class': 'col-md-8'}).appendTo(row);
-			p = $('<p>', {
-				css: {
-					'text-align': 'center',
-				}
-			}).appendTo(col);
-			$('<label>', {
-				'text': 'Play/Pause'
-			}).appendTo(p);
-			dpEditor.ui.animation.play = $('<a>', {
-				'class': 'btn btn-default',
-				'html': '<span class="fa fa-play"></span>',
-				'title': 'Play'
-			}).bind('mouseup', {}, function(event) {
-				dpEditor.animation.active = true;
-				$(this).hide();
-				$(dpEditor.ui.animation.pause).show();
-			}).appendTo(p);
-			dpEditor.ui.animation.pause = $('<a>', {
-				'class': 'btn btn-default',
-				'html': '<span class="fa fa-pause"></span>',
-				'title': 'Pause',
-				'css': {
-					'display': 'none',
-				}
-			}).bind('mouseup', {}, function(event) {
-				dpEditor.animation.active = false;
-				$(this).hide();
-				$(dpEditor.ui.animation.play).show();
-			}).appendTo(p);
-
-			// Ending Chart Select
-			col = $('<div>', {'class': 'col-md-2'}).appendTo(row);
-			p = $('<p>').appendTo(col);
-			$('<label>', {
-				'for': dpEditor.ui.class + '-animation-ending-chart',
-				'text': 'Ending Chart'
-			}).appendTo(p);
-			dpEditor.ui.animation.endingChart = $('<select>', {
-				'id': dpEditor.ui.class + '-animation-ending-chart'
-			}).bind('change', {}, function(event) {
-				dpEditor.setAnimationControls();
-			}).appendTo(p);
-
-			$('<hr>').appendTo(dpEditor.ui.animation.parent);
-		})();
-
 		// Controls Container
 		dpEditor.ui.controls.parent = $('<div>', {
 			'class': dpEditor.ui.class + '-controls'
@@ -536,6 +464,14 @@ class DPEditor {
 				'title': 'Rotate Performer',
 				'buttonSetting': 'active',
 				'object': 'DPRotatePerformer'
+			},
+			{
+				'folder': 'animation',
+				'featureId': uuidv4(),
+				'icon': 'play',
+				'title': 'View Animation',
+				'buttonSetting': 'active',
+				'object': 'DPAnimation'
 			},
 			{
 				'folder': 'resetpz',
@@ -986,38 +922,6 @@ class DPEditor {
 		}
 	}
 
-	setAnimationControls() {
-		this.applyToPerformers(DP.LOGIC.BUILD_ANIMATION_SET.CODE, {
-			startingChartIdx: parseInt($(this.ui.animation.startingChart).val()),
-			endingChartIdx: parseInt($(this.ui.animation.endingChart).val())
-		});
-		// now set how many counts there are in the animation.
-		// theoretically all performers should have the same number of counts in their animationPositionSet
-		if (this.getDPPerformers().length) {
-			this.animation.countMaxCount = this.getDPPerformers()[0].getAnimationPositionSet().length;
-		} else {
-			this.animation.countMaxCount = 0;
-		}
-	}
-
-	buildAnimationControls() {
-		$(this.ui.animation.startingChart).empty();
-		$(this.ui.animation.endingChart).empty();
-		var chart;
-		// starting & ending charts
-		for (var i = 0; i < this.dpChart.length; i++) {
-			chart = this.getDPChart(i);
-			$('<option>', {
-				'value': i,
-				'text': 'Chart ' + chart.getChartNumber().toString()
-			}).appendTo(this.ui.animation.startingChart);
-			$('<option>', {
-				'value': i,
-				'text': 'Chart ' + chart.getChartNumber().toString()
-			}).appendTo(this.ui.animation.endingChart);
-		}
-	}
-
 	// Reset the View from PanZoom
 	resetView() {
 		this.view.zoom = 1;
@@ -1036,8 +940,6 @@ class DPEditor {
 	}
 
 	redraw() {
-		this.buildAnimationControls();
-		this.setAnimationControls();
 		if (this.dpChart.length) {
 			var chartIdx = this.getActiveChartIdx();
 			var dpChart = this.dpChart[chartIdx];

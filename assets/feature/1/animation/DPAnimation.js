@@ -34,8 +34,40 @@ class DPAnimation extends DPFeature {
 			dpAnimation.setAnimationControls();
 		}).appendTo(p);
 
+		// Speed Controls
+		col = $('<div>', {'class': 'col-md-2'}).appendTo(row);
+		p = $('<p>', {
+			css: {
+				'margin-bottom': '0',
+			}
+		}).appendTo(col);
+		$('<label>', {
+			'text': 'Speed Controls'
+		}).appendTo(p);
+		var btnGroup = $('<div>', {
+			'class': 'btn-group'
+		}).appendTo(col);
+		$('<a>', {
+			'id': 'animation-speed-dec',
+			'class': 'btn btn-default',
+			'html': '<span class="fa fa-minus"></span>',
+			'title': 'Decrease Speed'
+		}).bind('mouseup', {}, function(event) {
+			// Decreasing speed means increasing the number of framesPerCount
+			dpEditor.animation.framesPerCount += 1;
+		}).appendTo(btnGroup);
+		$('<a>', {
+			'id': 'animation-speed-inc',
+			'class': 'btn btn-default',
+			'html': '<span class="fa fa-plus"></span>',
+			'title': 'Increase Speed'
+		}).bind('mouseup', {}, function(event) {
+			// Increasing speed means reducing the number of framesPerCount
+			dpEditor.animation.framesPerCount = Math.max(1, dpEditor.animation.framesPerCount-1);
+		}).appendTo(btnGroup);
+		
 		// Play Button
-		col = $('<div>', {'class': 'col-md-8'}).appendTo(row);
+		col = $('<div>', {'class': 'col-md-6'}).appendTo(row);
 		p = $('<p>', {
 			css: {
 				'text-align': 'center',

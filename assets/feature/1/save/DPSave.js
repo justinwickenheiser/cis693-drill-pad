@@ -9,13 +9,14 @@ class DPSave extends DPFeature {
 		$.ajax({
 			url: "/csrfToken"
 		}).done(function(res) {
+			console.log(res._csrf);
 			$.post("/api/v1/editor/save", {
 				_csrf: res._csrf,
 				editor: dpEditor.getJSON()
 			}, function andThen(res) {
+				console.log(res);
 			});
 		});
-		
 	}
 
 	deselect() {}

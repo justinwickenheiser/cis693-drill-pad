@@ -18,7 +18,7 @@ module.exports = {
 
 
   fn: async function (inputs) {
-    var editor = this.req.param('editor');
+    var editor = JSON.parse(this.req.param('editor'));
     var userId = this.req.session.userId;
     var qryExists = await Editor.findOne({publicId: editor.editorId});
 

@@ -29,8 +29,8 @@
 						<li><a href="#Select">Select</a></li>
 						<li><a href="#MovePerformer">Move Performer</a></li>
 						<li><a href="#RotatePerformer">Rotate Performer</a></li>
-						<li><a href="#ResetZoom">Reset Zoom</a></li>
 						<li><a href="#ViewAnimation">View Animation</a></li>
+						<li><a href="#ResetZoom">Reset Zoom</a></li>
 						<li><a href="#Save">Save</a></li>
 						<li><a href="#Print">Print</a></li>
 						<li><a href="#ManageCharts">Manage Charts</a></li>
@@ -163,6 +163,81 @@
 			<h3>Select</h3>
 			<p>
 				Click the <code>[<span class="fa fa-object-group"></span>]</code> button in the <em>Toolbar</em>. This acts as a lasso-type-tool. Draw a loop to around performers to select them. Drawing a new select will deselect all selected performers first.
+			</p>
+			<p>
+				Performers can also be selected individually by <code>Command + Click</code> (on Mac) or <code>Windows + Click</code> (on Windows). Performers can also be selected and deselected through the <em>Manage Performers</em> Feature (<code>[<span class="fa fa-users"></span>]</code>).
+			</p>
+
+			<a id="MovePerformer"></a>
+			<h3>Move Performer</h3>
+			<p>
+				The <em>Move Performer</em> Feature requires at least one performer be selected. With at least one performer selected, click the <code>[<span class="fa fa-male"></span>]</code> button in the <em>Toolbar</em>. This feature allows applying a set of <em>Standard Moves</em> to the selected performers in the form of <code>Instructions</code> and <code>Patterns</code>. The instructions/moves are applied based on the performers' position in the currently active chart.
+			</p>
+			<p>
+				The first input is the total number of counts that will be applied. From there, any number of <code>Patterns</code> can be added. A <code>Pattern</code> is simply a list of <code>Instructions</code>.
+			</p>
+			<p>
+				<strong>Instructions</strong><br />
+				An <code>Instruction</code> consists of a <em>Type of Movement</em>, <em>Step Size</em>, and <em>Number of Counts</em>. An <code>Instruction</code> can be interpreted as "Apply this <em>Type of Movement</em> using this <em>Step Size</em> for this <em>Number of Counts</em>".
+				<br />
+				<strong>Example:</strong> "Forward March (FM) 8 to 5 for 16 counts"
+			</p>
+			<p>
+				<strong>Types of Movements</strong><br />
+				<ul>
+					<li>Forward March (FM)</li>
+					<li>Backward March (BM)</li>
+					<li>Left Traverse (LT)</li>
+					<li>Right Traverse (RT)</li>
+					<li>Mark Time (MT)</li>
+					<li>Oblique Left</li>
+					<li>Oblique Right</li>
+					<li>Backward Oblique Left</li>
+					<li>Backward Oblique Right</li>
+				</ul>
+				<em>Note: Movement directions are from the performers's perspective.</em>
+			</p>
+			<p>
+				<strong>Patterns</strong><br />
+				A <code>Pattern</code> is simply a list of <code>Instructions</code> that can be applied one or more times. The number of times a <code>Pattern</code> is applied depends one if there is a <code>Reference Point</code> that is provided. If a <code>Reference Point</code> <strong>is not</strong> provided, the <code>Pattern</code> will be applied only <em>once</em> before moving to the next <code>Pattern</code>. If a <code>Reference Point</code> <strong>is</strong> provided, the <code>Pattern</code> will applied as many times as it takes until the performer hits the <code>Reference Point</code> before moving to the next <code>Pattern</code>.
+			</p>
+			<p>
+				<strong>Checking for Reference Point</strong><br />
+				The check to see if the performer hits the <code>Reference Point</code> happens prior to applying the <code>Pattern</code>. Then, the whole <code>Pattern</code> is applied before checking for the <code>Reference Point</code> again.
+			</p>
+			<p>
+				<strong>The Final Instruction</strong><br />
+				This instruction will be applied after all patterns are completed for the remaining number of counts.
+			</p>
+
+			<a id="RotatePerformer"></a>
+			<h3>Rotate Performer</h3>
+			<p>
+				The <em>Rotate Performer</em> Feature requires at least one performer be selected. With at least one performer selected, click the <code>[<span class="fa fa-rotate-right"></span>]</code> button in the <em>Toolbar</em>. Rotate a certain number of degrees over the given number of counts around the specified reference point.
+			</p>
+
+			<a id="ViewAnimation"></a>
+			<h3>View Animation</h3>
+			<p>
+				Click the <code>[<span class="fa fa-play"></span>]</code> button in the <em>Toolbar</em>. There are dropdowns to select the starting and ending charts. There is a play/pause button to control the animation. Finally there is a set of speed controls to decrease or increase the playback speed.
+			</p>
+
+			<a id="ResetZoom"></a>
+			<h3>Reset Zoom</h3>
+			<p>
+				Click the <code>[<span class="fa fa-search"></span>]</code> button in the <em>Toolbar</em> to reset the <em>Field's</em> Pan/Zoom.
+			</p>
+
+			<a id="Save"></a>
+			<h3>Save</h3>
+			<p>
+				Click the <code>[<span class="fa fa-save"></span>]</code> button in the <em>Toolbar</em> to save the whole contents of the show (charts, performers, settings, etc.). Reference Objects are currently not saved.
+			</p>
+
+			<a id="Print"></a>
+			<h3>Print</h3>
+			<p>
+				Click the <code>[<span class="fa fa-print"></span>]</code> button in the <em>Toolbar</em>. This will open a new tab and open the print dialogue. From there, the set of charts can be saved as a PDF or sent straight to a printer.
 			</p>
 		</div>
 	</div>
